@@ -1,16 +1,16 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
-import ToolBar from './ToolBar.js';
-import { paint } from '../functions/drawFunctions.js';
-import { addWindowListeners, zoomToRect } from '../functions/viewPortFunctions.js';
+import ToolBar from './ToolBar';
+import { paint } from '../functions/drawFunctions';
+import { addWindowListeners, zoomToRect } from '../functions/viewPortFunctions';
 import useEvents from '../customHooks/useEvents.js';
 import useDoubleClick from '../customHooks/useDoubleClick.js';
-import { ViewPortState } from '../atoms/viewportAtoms.js';
+import { ViewPortState } from '../atoms/viewportAtoms';
 import { useAtomValue } from 'jotai';
-import { Data, EventHandlers } from './ViewPortContainer.js';
+import { EventHandlers, PropsData } from './ViewPortContainer';
 import { isMobile } from '../reducers/functions.js';
-import { shapeAtom } from '../atoms/shapeAtoms.js';
+import { shapeAtom } from '../atoms/shapeAtoms';
 
-export type ViewPortProps = Data & {
+export type ViewPortProps = PropsData & {
     eventHandlers: EventHandlers
 }
 
@@ -24,7 +24,7 @@ export default function ViewPort({ viewPortData, setViewPortData, setAtom, getAt
         paint(ctx, viewPortData, getAtom)
     }, [shapes, viewPortData])
     useLayoutEffect(() => {
-        refCanvas.current.addEventListener("wheel", (e: Event) => {
+        refCanvas.current.addEventListener("wheel", (e: WheelEvent) => {
             eventHandlers.onMouseWheel(e);
             e.preventDefault();
         })
@@ -33,7 +33,7 @@ export default function ViewPort({ viewPortData, setViewPortData, setAtom, getAt
     useEffect(() => {
         setViewPortData((prevData: ViewPortState) => zoomToRect({ topLeft: { x: -100, y: 100 }, bottomRight: { x: 100, y: -100 } }, prevData));
     }, [])
-    const doubleClick = useDoubleClick(eventHandlers, (e: Event) => eventHandlers.onDoubleClick(e))
+    const doubleClick = useDoubleClick(eventHandlers, (e: PointerEvent) => eventHandlers.onDoubleClick(e))
     return <ToolBar id={"canvas-container"} noTitle={true} wide={false}>
         <canvas ref={refCanvas} id="canvas" style={{ width: `${viewPortData.viewPortWidth}px`, height: `${viewPortData.viewPortHeight}px`, cursor: 'none' }} width={viewPortData.viewPortWidth} height={viewPortData.viewPortHeight}
             {...events}

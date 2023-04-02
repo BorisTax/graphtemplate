@@ -2,7 +2,7 @@ import Geometry from "../utils/geometry";
 import { MouseHandler } from "./MouseHandler";
 import { getRealRect, getScreenRect, setCurCoord, setTopLeft } from "../functions/viewPortFunctions";
 import { Point } from "../types/properties";
-import { IHandler, THandlerProps } from "../interfaces/HandlerInterface";
+import { IHandler, TMouseProps, TTouchProps } from "../interfaces/HandlerInterface";
 import { setPrevHandler } from "../atoms/handlerAtoms";
 export interface IPanHandler extends IHandler {
     startPoint: Point
@@ -14,7 +14,7 @@ export class PanHandler extends MouseHandler implements IPanHandler {
         this.startPoint = startPoint;
     }
 
-    move(props: THandlerProps) {
+    move(props: TMouseProps) {
         const { curPoint, viewPortData, setViewPortData } = props
         super.move(props);
         let dx = this.curPoint.x - this.startPoint.x;
@@ -33,7 +33,7 @@ export class PanHandler extends MouseHandler implements IPanHandler {
         setViewPortData(prevData => setCurCoord(cursorPoint, curPoint, prevData))
 
     }
-    up(props: THandlerProps) {
+    up(props: TMouseProps) {
         const { button, setAtom } = props
         if (button === 1 || button === 2) setAtom(setPrevHandler)()
     }
@@ -43,18 +43,18 @@ export class PanHandler extends MouseHandler implements IPanHandler {
     keypress(code: string) {
         return super.keypress(code)
     }
-    leave(props: THandlerProps) {
+    leave(props: TMouseProps) {
         const { setAtom } = props
         super.leave(props);
         setAtom(setPrevHandler)()
     }
-    touchUp(props: THandlerProps) {
+    touchUp(props: TTouchProps) {
         const { setAtom } = props
         super.touchUp(props)
         setAtom(setPrevHandler)()
     }
-    touchMove(props: THandlerProps) {
-        this.move(props)
+    touchMove(props: TTouchProps) {
+        this.move({...props, button: 0, keys: {shiftKey: false, ctrlKey: false, altKey: false}})
     }
 
 }

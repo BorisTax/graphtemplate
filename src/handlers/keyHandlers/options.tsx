@@ -1,10 +1,12 @@
 import CancelKeyHandler from "./CancelKeyHandler";
 import DeleteKeyHandler from "./DeleteKeyHandler";
 import KeyHandler, { IKeyHandler } from "./KeyHandler";
-export type TKeys = {
-    ctrlKey: boolean,
-    shiftKey: boolean,
-    altKey: boolean,
+export type TAddKeys = {
+    ctrlKey?: boolean,
+    shiftKey?: boolean,
+    altKey?: boolean
+}
+export type TKeys = TAddKeys & {
     keyCode: number,
     handler: typeof KeyHandler
 }

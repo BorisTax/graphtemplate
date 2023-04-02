@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import Spinner from "./Spinner";
-import { AppActions } from "../actions/AppActions";
 import CheckBox from "./CheckBox";
 import ToolButton from "./ToolButton";
-import useActions from "../customHooks/useActions";
 const messages = require('../messages')
 
 export default function Register(props) {
@@ -13,9 +10,6 @@ export default function Register(props) {
   const refPass1 = useRef();
   const refPass2 = useRef();
   const refDialog = useRef();
-  const appActions = useActions()
-  const captions = useSelector((store) => store.captions.registerForm);
-  const serverMessages = useSelector(store => store.captions.serverMessages);
   const [state, setState] = useState({
     correct: false,
     errCode: 0,

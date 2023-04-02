@@ -10,9 +10,9 @@ export type ToolBarProps = {
         children?: ReactNode | ReactNode[],
         extStyle?: {}
 }
-export default function ToolBar({ id, expanded = true, expandable = true, caption = "", noTitle = false, wide = false, children, extStyle = {} }: ToolBarProps) {
+export default function ToolBar({ expanded = true, expandable = true, caption = "", noTitle = false, wide = false, children, extStyle = {} }: ToolBarProps) {
         const [expand, setExpanded] = useState(expanded)
-        if (!id) id = useId()
+        const id = useId()
         const contents = expand ? children : <></>
         return <div id={id} className={`${wide ? 'toolbar-wide' : 'toolbar'} noselect`} style={extStyle}>
                 {!noTitle ?

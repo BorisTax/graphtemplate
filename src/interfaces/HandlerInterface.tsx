@@ -2,20 +2,29 @@ import { Atom, WritableAtom } from "jotai";
 import { ViewPortState } from "../atoms/viewportAtoms";
 import Shape from "../components/shapes/Shape";
 import { Point } from "../types/properties";
-import { TKeys } from "../handlers/keyHandlers/options";
+import { TAddKeys, TKeys } from "../handlers/keyHandlers/options";
 import { SetViewPortFunc } from "../components/ViewPortContainer";
 import Cursor from "../components/shapes/cursors/Cursor";
-export type THandlerProps = {
-    button: number,
+export type TCommonProps = {
     curPoint: Point,
     viewPortData: ViewPortState,
     setViewPortData: SetViewPortFunc,
     getAtom: (a: Atom<any>) => any,
-    setAtom: (a: WritableAtom<any, any, any>) => any,
-    keys: TKeys,
-    deltaY?: number
-    pointerId?: number
+    setAtom: (a: WritableAtom<any, any, any>) => any
 }
+export type TMouseProps = TCommonProps & {
+    button?: number,
+    getAtom: (a: Atom<any>) => any,
+    setAtom: (a: WritableAtom<any, any, any>) => any,
+    keys?: TAddKeys
+}
+export type TTouchProps = TCommonProps & {
+    pointerId: number
+}
+export type TWheelProps = TCommonProps & {
+    deltaY?: number
+}
+
 
 export type TStatusBar = {text: string, icons: string[]}[]
 export interface IHandler {
@@ -26,18 +35,18 @@ export interface IHandler {
     statusBar : TStatusBar
     cursor: Cursor
     keypress: (code: string) => boolean
-    click: (props: THandlerProps) => void
-    doubleClick: (props: THandlerProps) => void
+    click: (props: TMouseProps) => void
+    doubleClick: (props: TMouseProps) => void
     isOutRect: (point: Point, viewPortData: ViewPortState) => boolean
-    move: (props: THandlerProps) => void
+    move: (props: TMouseProps) => void
     mouseOnScreen: (viewPortData: ViewPortState) => boolean
-    down:(props: THandlerProps) => void
-    up:(props: THandlerProps) => void
-    leave: (props: THandlerProps) => void
-    wheel:(props: THandlerProps) => void
-    touchDown: (props: THandlerProps) => void
-    touchMove: (props: THandlerProps) => void
-    touchUp: (props: THandlerProps) => void
+    down:(props: TMouseProps) => void
+    up:(props: TMouseProps) => void
+    leave: (props: TMouseProps) => void
+    wheel:(props: TWheelProps) => void
+    touchDown: (props: TTouchProps) => void
+    touchMove: (props: TTouchProps) => void
+    touchUp: (props: TTouchProps) => void
     }
 
 export interface IHandlerDraggable extends IHandler {

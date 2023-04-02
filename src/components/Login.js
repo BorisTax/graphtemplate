@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import Spinner from './Spinner';
-import { AppActions } from '../actions/AppActions';
 import CheckBox from './CheckBox';
-import useActions from '../customHooks/useActions';
 const messages = require('../messages')
 
 export default function Login(props) {
@@ -11,9 +8,6 @@ export default function Login(props) {
     const refPass = useRef();
     const refDialog = useRef();
     const [state, setState] = useState({ correct: true, logging: false, showPass: false, remember: false, message: "" })
-    const appActions = useActions()
-    const captions = useSelector(store => store.captions.loginForm)
-    const serverMessages = useSelector(store => store.captions.serverMessages)
     const onRegClick = () => {
         props.history.push('/register')
     }

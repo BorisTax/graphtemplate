@@ -2,7 +2,7 @@ import { MouseHandler } from "./MouseHandler";
 import { isMobile } from "../reducers/functions";
 import { setCurCoord } from "../functions/viewPortFunctions";
 import Geometry from "../utils/geometry";
-import { IHandlerDraggable, THandlerProps } from "../interfaces/HandlerInterface";
+import { IHandlerDraggable, TMouseProps, TTouchProps } from "../interfaces/HandlerInterface";
 import { addShapeToSelection, selectedShapeAtom, shapeAtom, updateShapes } from "../atoms/shapeAtoms";
 import { PanHandler } from "./PanHandler";
 import { setHandler } from "../atoms/handlerAtoms";
@@ -11,7 +11,7 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
     drag = false
     activeShape = null
 
-    move(props: THandlerProps) {
+    move(props: TMouseProps) {
         const { curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys } = props
         super.move(props);
         if (this.drag) {
@@ -34,8 +34,8 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
         setViewPortData(prevData => setCurCoord(this.curPoint, curPoint, prevData));
 
     }
-    down(props: THandlerProps) {
-        const { button, curPoint, viewPortData, setViewPortData, getAtom, setAtom, keys } = props
+    down(props: TMouseProps) {
+        const { button, curPoint, viewPortData, setViewPortData, getAtom, setAtom, keys ={} } = props
         super.down(props)
 
         setViewPortData(prevData => setCurCoord(this.curPoint, curPoint, prevData));
@@ -60,8 +60,8 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
         if (isMobile()) {  }
         setAtom(updateShapes)()
     }
-    click(props: THandlerProps) {
-        const { button, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys } = props
+    click(props: TMouseProps) {
+        const { button, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys = {} } = props
         super.click(props);
         if (button !== 0) return
         const shapes = getAtom(shapeAtom)
@@ -82,7 +82,7 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
         }
         setAtom(updateShapes)()
     }
-    doubleClick(props: THandlerProps) {
+    doubleClick(props: TMouseProps) {
         const { button, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys } = props
         super.doubleClick(props)
 
@@ -91,18 +91,18 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
     keypress(code: string) {
         return super.keypress(code)
     }
-    up(props: THandlerProps) {
+    up(props: TMouseProps) {
         this.drag = false;
         //appActions.updateState()
     }
 
-    touchDown(props: THandlerProps) {
-        const { pointerId, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys } = props
+    touchDown(props: TTouchProps) {
+        const { pointerId, curPoint, viewPortData, setViewPortData, setAtom, getAtom } = props
         super.touchDown(props)
-        this.down(props)
+        this.down({...props, button: 0, keys: {shiftKey: false, ctrlKey: false, altKey: false}})
     }
-    touchMove(props: THandlerProps) {
-        const { pointerId, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys } = props
+    touchMove(props: TTouchProps) {
+        const { pointerId, curPoint, viewPortData, setViewPortData, setAtom, getAtom } = props
         super.touchMove(props)
         const tm = viewPortData.touchManager
         if (tm.getTouchCount() > 1) {

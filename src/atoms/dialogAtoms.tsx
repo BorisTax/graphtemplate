@@ -3,7 +3,7 @@ import { SelectionSet, selectedShapeAtom, shapeAtom } from './shapeAtoms'
 import Shape from '../components/shapes/Shape'
 import { getAtomFunc, setAtomFunc } from './atoms'
 import { captionsAtom } from './languageAtoms'
-export type DialogButton = {
+export type DialogAction = {
     caption: string,
     onClick: () => void
 }
@@ -14,7 +14,7 @@ export type AlertDialog = {
 export type ConfirmDialog = {
     show: boolean,
     message: string,
-    actions: DialogButton[]
+    actions: DialogAction[]
 }
 export type CustomDialog = {
     show: boolean,
@@ -28,6 +28,7 @@ export const showConfirm = atom(null, (_, set, { message, actions}) => { set(con
 export const hideConfirm = atom(null, (_, set, { message, actions}) => { set(confirmDialogAtom, { show: false, message, actions}) })
 export const customDialogAtom = atom<CustomDialog>({ show: false, dialog: null })
 export const showCustomDialog = atom(null, (_, set, { show, dialog}) => { set(customDialogAtom, { show, dialog}) })
+
 
 export const deleteConfirm = (getAtom: getAtomFunc, setAtom: setAtomFunc) => {
     const captions = getAtom(captionsAtom)()
