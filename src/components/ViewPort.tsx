@@ -14,14 +14,13 @@ export type ViewPortProps = PropsData & {
     eventHandlers: EventHandlers
 }
 
-export default function ViewPort({ viewPortData, setViewPortData, setAtom, getAtom, eventHandlers }: ViewPortProps) {
+export default function ViewPort({ viewPortData, setViewPortData, shapes, eventHandlers }: ViewPortProps) {
     const events = useEvents(isMobile(), eventHandlers)
     const refCanvas: { current: any } = useRef()
-    const shapes = useAtomValue(shapeAtom)
     useEffect(() => {
         const ctx: CanvasRenderingContext2D = refCanvas.current.getContext('2d')
 
-        paint(ctx, viewPortData, getAtom)
+        paint(ctx, viewPortData, shapes)
     }, [shapes, viewPortData])
     useLayoutEffect(() => {
         refCanvas.current.addEventListener("wheel", (e: WheelEvent) => {

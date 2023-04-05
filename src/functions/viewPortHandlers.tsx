@@ -4,67 +4,67 @@ import { PropsData } from "../components/ViewPortContainer";
 import { TKeyHandlerProps } from "../handlers/keyHandlers/KeyHandler";
 
 export function pointerMove(e: PointerEvent, props: PropsData) {
-    const { handler, viewPortData, setViewPortData, setAtom, getAtom } = props
+    const { handler, viewPortData, setViewPortData  } = props
     const curPoint = getPoint(e)
     if (e.pointerType === "touch")
-        handler.touchMove({ pointerId: e.pointerId, curPoint, viewPortData, setViewPortData, setAtom, getAtom });
+        handler.touchMove({ pointerId: e.pointerId, curPoint, viewPortData, setViewPortData });
     else
         handler.move({button: 0,
-            curPoint, viewPortData, setViewPortData, setAtom, getAtom,
+            curPoint, viewPortData, setViewPortData, 
             keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey }
         })
 }
 export function pointerDown(e: PointerEvent, props: PropsData) {
-    const { handler, viewPortData, setViewPortData, setAtom, getAtom } = props
+    const { handler } = props
     const curPoint = getPoint(e)
     e.preventDefault()
     if (e.pointerType === "touch")
-        handler.touchDown({ pointerId: e.pointerId, curPoint: curPoint, viewPortData, setViewPortData, setAtom, getAtom });
+        handler.touchDown({ pointerId: e.pointerId, curPoint: curPoint, ...props });
     else
-        handler.down({ button: e.button, curPoint: curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
+        handler.down({ button: e.button, curPoint: curPoint, ...props, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
     //e.prPointerEventDefault();
 }
 
 export function pointerUp(e: PointerEvent, props: PropsData) {
-    const { handler, viewPortData, setViewPortData, setAtom, getAtom } = props
+    const { handler } = props
     const curPoint = getPoint(e)
     if (e.pointerType === "touch")
-        handler.touchUp({ pointerId: e.pointerId, curPoint, viewPortData, setViewPortData, setAtom, getAtom });
+        handler.touchUp({ pointerId: e.pointerId, curPoint, ...props });
     else
-        handler.up({ button: e.button, curPoint, viewPortData, setViewPortData, setAtom, getAtom });
+        handler.up({ button: e.button, curPoint, ...props });
 }
 
 export function mouseWheel(e: WheelEvent, props: PropsData) {
-    const { handler, viewPortData, setViewPortData, setAtom } = props
+    const { handler } = props
     const curPoint = getPoint(e)
-    handler.wheel({ ...props, deltaY: e.deltaY, curPoint, viewPortData, setViewPortData, setAtom})
+    handler.wheel({ ...props, deltaY: e.deltaY, curPoint, ...props})
     e.preventDefault();
 }
 export function pointerLeave(e: PointerEvent, props: PropsData) {
-    const{ handler, viewPortData, setViewPortData, setAtom, getAtom } = props
+    const{ handler } = props
     if (e.pointerType === "touch")
-        handler.touchUp({ pointerId: e.pointerId, curPoint: getPoint(e), viewPortData, setViewPortData, setAtom, getAtom });
+        handler.touchUp({ pointerId: e.pointerId, curPoint: getPoint(e), ...props });
     else
-        handler.leave({ viewPortData, setViewPortData, setAtom, getAtom, curPoint: getPoint(e)});
+        handler.leave({ curPoint: getPoint(e), ...props});
 }
 
 export function pointerEnter(e: PointerEvent, props: PropsData) {
 }
 
 export function click(e: PointerEvent, props: PropsData) {
-    const { handler, viewPortData, setViewPortData, setAtom, getAtom } = props
+    const { handler } = props
     const curPoint = getPoint(e)
     e.preventDefault()
-    handler.click({ button: e.button, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
+    handler.click({ button: e.button, curPoint, ...props, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
 }
 
 export function doubleClick(e: PointerEvent, props: PropsData) {
-    const  { handler, viewPortData, setViewPortData, setAtom, getAtom } = props
+    const  { handler } = props
     const curPoint = getPoint(e)
     if (e.pointerType === "touch")
-        handler.doubleClick({ button: 0, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
+        handler.doubleClick({ button: 0, curPoint, ...props, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
     else
-        handler.doubleClick({ button: e.button, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
+        handler.doubleClick({ button: e.button, curPoint, ...props, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
 }
 
 export function keyPress(e: KeyboardEvent, props: TKeyHandlerProps) {
@@ -79,12 +79,12 @@ export function keyUp(e: KeyboardEvent, props: TKeyHandlerProps) {
 };
 
 export function keyDown(e: KeyboardEvent, props: TKeyHandlerProps) {
-    const {handler, setAtom, getAtom } = props
+    const {handler} = props
     handler.cursor.setAdditional({ shiftKey: e.shiftKey, altKey: e.altKey });
     keyHandlers.forEach(key => {
         if (e.ctrlKey === key.ctrlKey && e.shiftKey === key.shiftKey && e.altKey === key.altKey && e.keyCode === key.keyCode) {
             const keyHandler = new key.handler()
-            keyHandler.keyDown(e, { handler, getAtom, setAtom })
+            keyHandler.keyDown(e, { handler})
             e.preventDefault();
         }
     })

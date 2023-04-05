@@ -12,7 +12,7 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
     activeShape = null
 
     move(props: TMouseProps) {
-        const { curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys } = props
+        const { curPoint, viewPortData, setViewPortData, shapes, keys } = props
         super.move(props);
         if (this.drag) {
             //if (!keys.shiftKey) appData.selectedPanels.clear()
@@ -20,7 +20,6 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
             return;
         } 
         this.activeShape = null;
-        const shapes = getAtom(shapeAtom)
         for (let p of shapes) {
             if (!p.state.selectable) continue;
             if (p.isUnderCursor(this.curPoint, viewPortData.pixelRatio)) {
@@ -35,7 +34,7 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
 
     }
     down(props: TMouseProps) {
-        const { button, curPoint, viewPortData, setViewPortData, getAtom, setAtom, keys ={} } = props
+        const { button, curPoint, viewPortData, setViewPortData, keys ={} } = props
         super.down(props)
 
         setViewPortData(prevData => setCurCoord(this.curPoint, curPoint, prevData));

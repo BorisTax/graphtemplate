@@ -3,8 +3,6 @@ import { MouseHandler } from "../MouseHandler";
 
 export type TKeyHandlerProps = {
     handler: MouseHandler,
-    getAtom: (a: Atom<any>) => any,
-    setAtom: (a: WritableAtom<any, any, any>) => any,
 }
 
 export interface IKeyHandler {
@@ -22,8 +20,7 @@ export default class KeyHandler implements IKeyHandler {
     };
 
     keyUp(e: KeyboardEvent, props: TKeyHandlerProps) {
-        const {getAtom} = props
-        //appData.cursor.setAdditional({ shiftKey: e.shiftKey, altKey: e.altKey });
+
     };
 
     keyDown(e: KeyboardEvent, props: TKeyHandlerProps) {

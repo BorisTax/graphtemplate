@@ -9,13 +9,9 @@ export type TCommonProps = {
     curPoint: Point,
     viewPortData: ViewPortState,
     setViewPortData: SetViewPortFunc,
-    getAtom: (a: Atom<any>) => any,
-    setAtom: (a: WritableAtom<any, any, any>) => any
 }
 export type TMouseProps = TCommonProps & {
     button?: number,
-    getAtom: (a: Atom<any>) => any,
-    setAtom: (a: WritableAtom<any, any, any>) => any,
     keys?: TAddKeys
 }
 export type TTouchProps = TCommonProps & {

@@ -1,12 +1,10 @@
 import React, { useEffect } from "react";
 import ViewPort from './ViewPort'
 import { pointerMove, pointerDown, pointerUp, pointerLeave, pointerEnter, mouseWheel, click, doubleClick, keyDown, keyPress, keyUp } from "../functions/viewPortHandlers";
-import { ViewPortState, setViewPortData, viewPortAtom } from "../atoms/viewportAtoms";
-import { Atom, WritableAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { handlerAtom } from "../atoms/handlerAtoms";
+import { ViewPortState} from "../atoms/viewportAtoms";
 import { MouseHandler } from "../handlers/MouseHandler";
-import { getAtomFunc, setAtomFunc } from "../atoms/atoms";
-import { shapeAtom } from "../atoms/shapeAtoms";
+import useAllAtoms from "../customHooks/useAllAtoms";
+import Shape from "./shapes/Shape";
 
 export type EventHandlers = {
     onPointerMove: (e: PointerEvent) => void,
@@ -24,48 +22,29 @@ export type PropsData = {
     viewPortData: ViewPortState,
     setViewPortData: SetViewPortFunc,
     handler: MouseHandler,
-    getAtom: getAtomFunc,
-    setAtom: setAtomFunc,
+    shapes: Shape[]
 }
 
 export default function ViewPortContainer() {
-    const [viewPortData, setViewPortData] = useAtom(viewPortAtom)
-    const handler = useAtomValue(handlerAtom)
-
-    const getData = (): PropsData => ({
-        viewPortData: useAtomValue(viewPortAtom),
-        setViewPortData: (callback) => {
-            const setData = useSetAtom(setViewPortData)
-            const prevData: ViewPortState = useAtomValue(viewPortAtom)
-            setData(callback(prevData))
-        },
-        handler: useAtomValue(handlerAtom),
-        getAtom: (a: Atom<any>) => useAtomValue(a),
-        setAtom: (a: WritableAtom<any, any, any>) => useSetAtom(a)
-    })
-    const data = {
-        viewPortData, 
-        setViewPortData,
-        handler
-    }
+    const data = useAllAtoms()
     useEffect(() => {
-        window.addEventListener('keypress', (e: KeyboardEvent) => { keyPress(e, { handler: getData().handler, setAtom: getData().setAtom, getAtom: getData().getAtom  }) })
-        window.addEventListener('keydown', (e: KeyboardEvent) => { keyDown(e, { handler: getData().handler, setAtom: getData().setAtom, getAtom: getData().getAtom }) })
-        window.addEventListener('keyup', (e: KeyboardEvent) => { keyUp(e, {handler: getData().handler, setAtom: getData().setAtom, getAtom: getData().getAtom  }) })
+        window.addEventListener('keypress', (e: KeyboardEvent) => { keyPress(e, { handler: data.handler}) })
+        window.addEventListener('keydown', (e: KeyboardEvent) => { keyDown(e, { handler: data.handler}) })
+        window.addEventListener('keyup', (e: KeyboardEvent) => { keyUp(e, {handler: data.handler}) })
     }, [])
 
     const eventHandlers: EventHandlers = {
-        onPointerMove: (e: PointerEvent) => { pointerMove(e, {...getData()}) },
-        onPointerDown: (e: PointerEvent) => { pointerDown(e, getData()) },
-        onPointerUp: (e: PointerEvent) => { pointerUp(e, getData()) },
-        onMouseWheel: (e: WheelEvent) => { mouseWheel(e, getData()) },
-        onPointerLeave: (e: PointerEvent) => { pointerLeave(e, getData()) },
-        onPointerEnter: (e: PointerEvent) => { pointerEnter(e, getData()) },
-        onClick: (e: PointerEvent) => { click(e, getData()) },
-        onDoubleClick: (e: PointerEvent) => { doubleClick(e, getData()) },
+        onPointerMove: (e: PointerEvent) => { pointerMove(e, data) },
+        onPointerDown: (e: PointerEvent) => { pointerDown(e, data) },
+        onPointerUp: (e: PointerEvent) => { pointerUp(e, data) },
+        onMouseWheel: (e: WheelEvent) => { mouseWheel(e, data) },
+        onPointerLeave: (e: PointerEvent) => { pointerLeave(e, data) },
+        onPointerEnter: (e: PointerEvent) => { pointerEnter(e, data) },
+        onClick: (e: PointerEvent) => { click(e, data) },
+        onDoubleClick: (e: PointerEvent) => { doubleClick(e, data) },
     }
     return <ViewPort
-        {...getData()}
+        {...data}
         eventHandlers={eventHandlers}
     />
 }

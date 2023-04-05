@@ -2,11 +2,14 @@ import { getAtomFunc } from '../atoms/atoms';
 import { handlerAtom } from '../atoms/handlerAtoms';
 import { shapeAtom } from '../atoms/shapeAtoms';
 import { ViewPortState } from '../atoms/viewportAtoms';
+import { PropsData } from '../components/ViewPortContainer';
 import ShapeStyle from '../components/shapes/ShapeStyle';
 import { isMobile } from '../reducers/functions';
+import { Rect } from '../types/properties';
+import { Rectangle } from '../utils/geometry';
 import { getRealRect, getScreenRect } from './viewPortFunctions'
 
-export function paint(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState, getAtom: getAtomFunc) {
+export function paint(ctx: CanvasRenderingContext2D, props: PropsData) {
     const color = "white"
     ctx.fillStyle = color;
     ctx.lineWidth = 1;
@@ -15,11 +18,9 @@ export function paint(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState
     ctx.fillRect(0, 0, viewPortData.viewPortWidth, viewPortData.viewPortHeight);
     //ctx.strokeRect(0, 0, viewPortData.viewPortWidth-1, viewPortData.viewPortHeight-1);
     const { topLeft, bottomRight, viewPortWidth, viewPortHeight, marginRight, marginTop, marginLeft, marginBottom } = viewPortData;
-    const realRect = getRealRect(topLeft, bottomRight)
-    const screenRect = getScreenRect(viewPortWidth, viewPortHeight)
-    const shapes = getAtom(shapeAtom)()
-    const handler = getAtom(handlerAtom)()
-    for (let shape of shapes) {
+    const realRect: Rect = getRealRect(topLeft, bottomRight)
+    const screenRect: Rect = getScreenRect(viewPortWidth, viewPortHeight)
+    for (let shape of props.shapes) {
         shape.draw(ctx, realRect, screenRect);
     }
     let curShape = handler.curShape;
