@@ -4,8 +4,9 @@ import { Point, TProperty, Rect } from "../types/properties"
 
 
 export type ShapeState = {
-    selected: boolean,
-    highlighted: boolean,
+    selected?: boolean,
+    selectable?: boolean,
+    highlighted?: boolean,
     error?: boolean
 }
 export interface IShape {
@@ -19,6 +20,7 @@ export interface IShape {
     getStyle: () => ShapeStyle
     setStyle: (style: ShapeStyle) => void
     setState: (state: ShapeState) => void
+    isUnderCursor: (p: Point, pixelRatio: number) => boolean
     isInSelectionRect: (rect: Rect) => {cross: boolean, full: boolean}
     getDistance: (point: Point) => number
 }

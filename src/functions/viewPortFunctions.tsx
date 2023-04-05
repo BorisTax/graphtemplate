@@ -1,5 +1,5 @@
 import { ViewPortState } from "../atoms/viewportAtoms";
-import { SetViewPortFunc } from "../components/ViewPortContainer";
+import { SetViewPortFunc } from "../customHooks/useAllAtoms";
 import { Point, Rect } from "../types/properties";
 import { Rectangle } from "../utils/geometry";
 
@@ -56,21 +56,22 @@ export function setTopLeft(topLeft: Point, viewPortData: ViewPortState) {
   bottomRight.y = topLeft.y - viewPortData.realHeight;
   return { ...viewPortData, topLeft, bottomRight };
 }
-export function getRealRect(topLeft: Point, bottomRight: Point) {
-  let realRect = new Rectangle();
-  realRect.topLeft = topLeft;
-  realRect.bottomRight = bottomRight;
-  realRect.width = bottomRight.x - topLeft.x;
-  realRect.height = topLeft.y - bottomRight.y;
-  return realRect;
+export function getRealRect(topLeft: Point, bottomRight: Point): Rect {
+  return {
+    topLeft,
+    bottomRight,
+    width: bottomRight.x - topLeft.x,
+    height: topLeft.y - bottomRight.y
+  }
 }
 
-export function getScreenRect(viewPortWidth: number, viewPortHeight: number) {
-  let screenRect = new Rectangle();
-  screenRect.topLeft = {x: 0, y: 0};
-  screenRect.width = viewPortWidth;
-  screenRect.height = viewPortHeight;
-  return screenRect;
+export function getScreenRect(viewPortWidth: number, viewPortHeight: number): Rect {
+  return {
+    topLeft: {x: 0, y: 0},
+    width: viewPortWidth,
+    height: viewPortHeight,
+    bottomRight: {x: viewPortWidth, y: viewPortHeight}
+  }
 }
 
 export function getRealAndScreenRect(viewPortData: ViewPortState) {
@@ -124,7 +125,7 @@ export function addWindowListeners(viewPortData: ViewPortState, setViewPortData:
   const spinner = document.getElementById("spinner")
   if(spinner) spinner.style.display = "none";
   const { sw, sh } = resize(viewPortData, setViewPortData, canvas);
-  setViewPortData((prevData: ViewPortState) => setDimensions(sw, sh, 10000, prevData));
+  setViewPortData(setDimensions(sw, sh, 10000, viewPortData));
   //setViewPortData((prevData) => scale(2, { x: 0, y: 0 }, prevData));
 
 
@@ -159,8 +160,7 @@ function resize(viewPortData: ViewPortState, setViewPortData: SetViewPortFunc, c
     window.innerHeight <= window.innerWidth
       ? wHeight * 0.8
       : sw
-  setViewPortData((prevData) =>
-    setDimensions(sw, sh, prevData.realWidth, prevData)
+  setViewPortData(setDimensions(sw, sh, viewPortData.realWidth, viewPortData)
   );
   canvas.width = sw;
   canvas.height = sh;

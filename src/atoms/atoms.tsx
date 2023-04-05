@@ -1,4 +1,8 @@
-import { Atom, WritableAtom } from "jotai"
+import { Atom, Getter, Setter, WritableAtom } from "jotai"
 
-export type getAtomFunc = (a: Atom<any>) => any
-export type setAtomFunc = (a: WritableAtom<any, any, any>) => any
+export type AtomAction = {
+    type: string,
+    payload?: any
+}
+export type SetAtomFunc = (action: AtomAction) => void
+export type AtomReducer = (action: AtomAction, get: Getter, set: Setter) => any

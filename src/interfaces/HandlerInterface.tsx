@@ -1,15 +1,12 @@
-import { Atom, WritableAtom } from "jotai";
 import { ViewPortState } from "../atoms/viewportAtoms";
 import Shape from "../components/shapes/Shape";
 import { Point } from "../types/properties";
-import { TAddKeys, TKeys } from "../handlers/keyHandlers/options";
-import { SetViewPortFunc } from "../components/ViewPortContainer";
+import { TAddKeys } from "../handlers/keyHandlers/options";
 import Cursor from "../components/shapes/cursors/Cursor";
+import { AllAtomsProps, SetViewPortFunc } from "../customHooks/useAllAtoms";
 export type TCommonProps = {
     curPoint: Point,
-    viewPortData: ViewPortState,
-    setViewPortData: SetViewPortFunc,
-}
+} & AllAtomsProps
 export type TMouseProps = TCommonProps & {
     button?: number,
     keys?: TAddKeys

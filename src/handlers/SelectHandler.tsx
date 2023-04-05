@@ -3,16 +3,16 @@ import { isMobile } from "../reducers/functions";
 import { setCurCoord } from "../functions/viewPortFunctions";
 import Geometry from "../utils/geometry";
 import { IHandlerDraggable, TMouseProps, TTouchProps } from "../interfaces/HandlerInterface";
-import { addShapeToSelection, selectedShapeAtom, shapeAtom, updateShapes } from "../atoms/shapeAtoms";
 import { PanHandler } from "./PanHandler";
-import { setHandler } from "../atoms/handlerAtoms";
+import Shape from "../components/shapes/Shape";
+import { Actions } from "../atoms/actions";
 
 export class SelectHandler extends MouseHandler implements IHandlerDraggable {
     drag = false
-    activeShape = null
+    activeShape: Shape | null = null
 
     move(props: TMouseProps) {
-        const { curPoint, viewPortData, setViewPortData, shapes, keys } = props
+        const { curPoint, viewPortData, setViewPortData, shapeState, keys } = props
         super.move(props);
         if (this.drag) {
             //if (!keys.shiftKey) appData.selectedPanels.clear()
@@ -20,7 +20,7 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
             return;
         } 
         this.activeShape = null;
-        for (let p of shapes) {
+        for (let p of shapeState.shapes) {
             if (!p.state.selectable) continue;
             if (p.isUnderCursor(this.curPoint, viewPortData.pixelRatio)) {
                 p.setState({ highlighted: true })
@@ -30,22 +30,22 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
             }
         }
         
-        setViewPortData(prevData => setCurCoord(this.curPoint, curPoint, prevData));
+        setViewPortData(setCurCoord(this.curPoint, curPoint, viewPortData));
 
     }
     down(props: TMouseProps) {
-        const { button, curPoint, viewPortData, setViewPortData, keys ={} } = props
+        const { button, curPoint, viewPortData, setViewPortData, shapeState, setShapeState, setHandler, keys ={} } = props
         super.down(props)
 
-        setViewPortData(prevData => setCurCoord(this.curPoint, curPoint, prevData));
+        setViewPortData(setCurCoord(this.curPoint, curPoint, viewPortData));
         if (button === 1 || button === 2) {
-            setAtom(setHandler)({handler: new PanHandler(this.curPoint), prevHandler: this})
+            setHandler(Actions.setHandler(new PanHandler(this.curPoint), this))
             return
         }
         if (button !== 0) return
         this.activeShape = null;
-        const shapes = getAtom(shapeAtom)
-        const selected = getAtom(selectedShapeAtom)
+        const shapes = shapeState.shapes
+        const selected = shapeState.selected
         for (let p of shapes) {
             if (!p.state.selectable) continue;
             if (p.isUnderCursor(this.curPoint, viewPortData.pixelRatio)) {
@@ -57,18 +57,18 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
         }
         this.drag = false;
         if (isMobile()) {  }
-        setAtom(updateShapes)()
+        setShapeState(Actions.updateShapes())
     }
     click(props: TMouseProps) {
-        const { button, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys = {} } = props
+        const { button, curPoint, viewPortData, setViewPortData, setShapeState, shapeState, keys = {} } = props
         super.click(props);
         if (button !== 0) return
-        const shapes = getAtom(shapeAtom)
-        const selected = getAtom(selectedShapeAtom)
+        const shapes = shapeState.shapes
+        const selected = shapeState.selected
         for (let p of shapes) {
             if (p.isUnderCursor(this.curPoint, viewPortData.pixelRatio)) {
                 if (keys.shiftKey) {
-                    if(selected.selectedPanels.has(p)) selected.delete(p);
+                    if(selected.has(p)) selected.delete(p);
                             else selected.add(p)
                 } else {
                     selected.add(p)
@@ -79,10 +79,10 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
                 }
             }
         }
-        setAtom(updateShapes)()
+        setShapeState(Actions.updateShapes())
     }
     doubleClick(props: TMouseProps) {
-        const { button, curPoint, viewPortData, setViewPortData, setAtom, getAtom, keys } = props
+        const { button, curPoint, viewPortData, setViewPortData, setShapeState, shapeState, keys } = props
         super.doubleClick(props)
 
     }
@@ -96,12 +96,11 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
     }
 
     touchDown(props: TTouchProps) {
-        const { pointerId, curPoint, viewPortData, setViewPortData, setAtom, getAtom } = props
         super.touchDown(props)
         this.down({...props, button: 0, keys: {shiftKey: false, ctrlKey: false, altKey: false}})
     }
     touchMove(props: TTouchProps) {
-        const { pointerId, curPoint, viewPortData, setViewPortData, setAtom, getAtom } = props
+        const { pointerId, curPoint, viewPortData, setViewPortData, setHandler } = props
         super.touchMove(props)
         const tm = viewPortData.touchManager
         if (tm.getTouchCount() > 1) {
@@ -121,7 +120,7 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
                 //appActions.movePanel(this.activeShape, this.dragPos);
                 return;
             }
-            setAtom(setHandler)({handler: new PanHandler(this.curPoint), prevHandler: this})
+            setHandler(Actions.setHandler(new PanHandler(this.curPoint), this))
         }
     }
 }

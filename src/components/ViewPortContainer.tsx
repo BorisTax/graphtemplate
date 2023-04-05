@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import ViewPort from './ViewPort'
 import { pointerMove, pointerDown, pointerUp, pointerLeave, pointerEnter, mouseWheel, click, doubleClick, keyDown, keyPress, keyUp } from "../functions/viewPortHandlers";
-import { ViewPortState} from "../atoms/viewportAtoms";
-import { MouseHandler } from "../handlers/MouseHandler";
 import useAllAtoms from "../customHooks/useAllAtoms";
-import Shape from "./shapes/Shape";
 
 export type EventHandlers = {
     onPointerMove: (e: PointerEvent) => void,
@@ -17,14 +14,6 @@ export type EventHandlers = {
     onDoubleClick: (e: PointerEvent) => void,
 }
 
-export type SetViewPortFunc = (callback: (data: ViewPortState) => ViewPortState) => void
-export type PropsData = {
-    viewPortData: ViewPortState,
-    setViewPortData: SetViewPortFunc,
-    handler: MouseHandler,
-    shapes: Shape[]
-}
-
 export default function ViewPortContainer() {
     const data = useAllAtoms()
     useEffect(() => {
@@ -32,7 +21,6 @@ export default function ViewPortContainer() {
         window.addEventListener('keydown', (e: KeyboardEvent) => { keyDown(e, { handler: data.handler}) })
         window.addEventListener('keyup', (e: KeyboardEvent) => { keyUp(e, {handler: data.handler}) })
     }, [])
-
     const eventHandlers: EventHandlers = {
         onPointerMove: (e: PointerEvent) => { pointerMove(e, data) },
         onPointerDown: (e: PointerEvent) => { pointerDown(e, data) },

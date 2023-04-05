@@ -1,20 +1,20 @@
 import { getPoint } from "./viewPortFunctions";
 import { keyHandlers } from "../handlers/keyHandlers/options";
-import { PropsData } from "../components/ViewPortContainer";
 import { TKeyHandlerProps } from "../handlers/keyHandlers/KeyHandler";
+import { AllAtomsProps } from "../customHooks/useAllAtoms";
 
-export function pointerMove(e: PointerEvent, props: PropsData) {
+export function pointerMove(e: PointerEvent, props: AllAtomsProps) {
     const { handler, viewPortData, setViewPortData  } = props
     const curPoint = getPoint(e)
     if (e.pointerType === "touch")
-        handler.touchMove({ pointerId: e.pointerId, curPoint, viewPortData, setViewPortData });
+        handler.touchMove({ pointerId: e.pointerId, curPoint, ...props });
     else
         handler.move({button: 0,
-            curPoint, viewPortData, setViewPortData, 
+            curPoint, ...props, 
             keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey }
         })
 }
-export function pointerDown(e: PointerEvent, props: PropsData) {
+export function pointerDown(e: PointerEvent, props: AllAtomsProps) {
     const { handler } = props
     const curPoint = getPoint(e)
     e.preventDefault()
@@ -25,7 +25,7 @@ export function pointerDown(e: PointerEvent, props: PropsData) {
     //e.prPointerEventDefault();
 }
 
-export function pointerUp(e: PointerEvent, props: PropsData) {
+export function pointerUp(e: PointerEvent, props: AllAtomsProps) {
     const { handler } = props
     const curPoint = getPoint(e)
     if (e.pointerType === "touch")
@@ -34,13 +34,13 @@ export function pointerUp(e: PointerEvent, props: PropsData) {
         handler.up({ button: e.button, curPoint, ...props });
 }
 
-export function mouseWheel(e: WheelEvent, props: PropsData) {
+export function mouseWheel(e: WheelEvent, props: AllAtomsProps) {
     const { handler } = props
     const curPoint = getPoint(e)
     handler.wheel({ ...props, deltaY: e.deltaY, curPoint, ...props})
     e.preventDefault();
 }
-export function pointerLeave(e: PointerEvent, props: PropsData) {
+export function pointerLeave(e: PointerEvent, props: AllAtomsProps) {
     const{ handler } = props
     if (e.pointerType === "touch")
         handler.touchUp({ pointerId: e.pointerId, curPoint: getPoint(e), ...props });
@@ -48,17 +48,17 @@ export function pointerLeave(e: PointerEvent, props: PropsData) {
         handler.leave({ curPoint: getPoint(e), ...props});
 }
 
-export function pointerEnter(e: PointerEvent, props: PropsData) {
+export function pointerEnter(e: PointerEvent, props: AllAtomsProps) {
 }
 
-export function click(e: PointerEvent, props: PropsData) {
+export function click(e: PointerEvent, props: AllAtomsProps) {
     const { handler } = props
     const curPoint = getPoint(e)
     e.preventDefault()
     handler.click({ button: e.button, curPoint, ...props, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
 }
 
-export function doubleClick(e: PointerEvent, props: PropsData) {
+export function doubleClick(e: PointerEvent, props: AllAtomsProps) {
     const  { handler } = props
     const curPoint = getPoint(e)
     if (e.pointerType === "touch")

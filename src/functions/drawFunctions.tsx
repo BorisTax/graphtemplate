@@ -1,15 +1,17 @@
-import { getAtomFunc } from '../atoms/atoms';
-import { handlerAtom } from '../atoms/handlerAtoms';
-import { shapeAtom } from '../atoms/shapeAtoms';
+import { ShapeAtomState } from '../atoms/shapeAtoms';
 import { ViewPortState } from '../atoms/viewportAtoms';
-import { PropsData } from '../components/ViewPortContainer';
 import ShapeStyle from '../components/shapes/ShapeStyle';
+import { IHandler } from '../interfaces/HandlerInterface';
 import { isMobile } from '../reducers/functions';
 import { Rect } from '../types/properties';
-import { Rectangle } from '../utils/geometry';
 import { getRealRect, getScreenRect } from './viewPortFunctions'
-
-export function paint(ctx: CanvasRenderingContext2D, props: PropsData) {
+export type PaintProps = {
+    viewPortData: ViewPortState,
+    shapeState: ShapeAtomState,
+    handler: IHandler
+}
+export function paint(ctx: CanvasRenderingContext2D, props: PaintProps) {
+    const {viewPortData, shapeState, handler} = props
     const color = "white"
     ctx.fillStyle = color;
     ctx.lineWidth = 1;
@@ -20,7 +22,7 @@ export function paint(ctx: CanvasRenderingContext2D, props: PropsData) {
     const { topLeft, bottomRight, viewPortWidth, viewPortHeight, marginRight, marginTop, marginLeft, marginBottom } = viewPortData;
     const realRect: Rect = getRealRect(topLeft, bottomRight)
     const screenRect: Rect = getScreenRect(viewPortWidth, viewPortHeight)
-    for (let shape of props.shapes) {
+    for (let shape of shapeState.shapes) {
         shape.draw(ctx, realRect, screenRect);
     }
     let curShape = handler.curShape;
@@ -37,7 +39,7 @@ export function paint(ctx: CanvasRenderingContext2D, props: PropsData) {
     ctx.strokeRect(marginLeft, marginTop, viewPortWidth - marginRight - marginLeft, viewPortHeight - marginBottom - marginTop);
 
     ctx.lineWidth = 1;
-    if (isMobile() && handler.mouseOnScreen()) {
+    if (isMobile() && handler.mouseOnScreen(viewPortData)) {
         handler.cursor.setPosition(viewPortData.curRealPoint);
         handler.cursor.draw(ctx, realRect, screenRect);
     }

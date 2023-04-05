@@ -5,23 +5,22 @@ import { addWindowListeners, zoomToRect } from '../functions/viewPortFunctions';
 import useEvents from '../customHooks/useEvents.js';
 import useDoubleClick from '../customHooks/useDoubleClick.js';
 import { ViewPortState } from '../atoms/viewportAtoms';
-import { useAtomValue } from 'jotai';
-import { EventHandlers, PropsData } from './ViewPortContainer';
+import { EventHandlers } from './ViewPortContainer';
 import { isMobile } from '../reducers/functions.js';
-import { shapeAtom } from '../atoms/shapeAtoms';
+import { AllAtomsProps } from '../customHooks/useAllAtoms';
 
-export type ViewPortProps = PropsData & {
+export type ViewPortProps = AllAtomsProps & {
     eventHandlers: EventHandlers
 }
 
-export default function ViewPort({ viewPortData, setViewPortData, shapes, eventHandlers }: ViewPortProps) {
+export default function ViewPort({ viewPortData, setViewPortData, shapeState, handler, eventHandlers }: ViewPortProps) {
     const events = useEvents(isMobile(), eventHandlers)
     const refCanvas: { current: any } = useRef()
     useEffect(() => {
         const ctx: CanvasRenderingContext2D = refCanvas.current.getContext('2d')
 
-        paint(ctx, viewPortData, shapes)
-    }, [shapes, viewPortData])
+        paint(ctx, {viewPortData, shapeState, handler})
+    }, [shapeState, viewPortData])
     useLayoutEffect(() => {
         refCanvas.current.addEventListener("wheel", (e: WheelEvent) => {
             eventHandlers.onMouseWheel(e);
@@ -30,7 +29,7 @@ export default function ViewPort({ viewPortData, setViewPortData, shapes, eventH
         addWindowListeners(viewPortData, setViewPortData, refCanvas.current)
     }, [])
     useEffect(() => {
-        setViewPortData((prevData: ViewPortState) => zoomToRect({ topLeft: { x: -100, y: 100 }, bottomRight: { x: 100, y: -100 } }, prevData));
+        setViewPortData(zoomToRect({ topLeft: { x: -100, y: 100 }, bottomRight: { x: 100, y: -100 } }, viewPortData));
     }, [])
     const doubleClick = useDoubleClick(eventHandlers, (e: PointerEvent) => eventHandlers.onDoubleClick(e))
     return <ToolBar id={"canvas-container"} noTitle={true} wide={false}>

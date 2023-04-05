@@ -3,7 +3,7 @@ import { Point, Rect } from '../../types/properties';
 import { Color } from '../colors';
 import ShapeStyle from './ShapeStyle';
 export default class Shape implements IShape, IShapeSelection{
-    state: ShapeState = {selected: false, highlighted: false}
+    state: ShapeState = {selectable: true, selected: false, highlighted: false}
     properties = new Map()
     style: ShapeStyle = new ShapeStyle(Color.BLACK, ShapeStyle.SOLID)
     constructor(){
@@ -61,7 +61,9 @@ export default class Shape implements IShape, IShapeSelection{
     getDistance(point: Point) {
         return 0
     }
-    
+    isUnderCursor(p: Point, pixelRatio: number){
+        return false
+    }
     isInSelectionRect({topLeft, bottomRight}: Rect): {cross: boolean, full: boolean} {
         return { cross: false, full: false };
     }
