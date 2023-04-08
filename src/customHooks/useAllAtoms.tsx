@@ -1,7 +1,7 @@
-import { useAtom, useAtomValue, useSetAtom} from "jotai"
+import { useAtomValue, useSetAtom} from "jotai"
 import { handlerAtom, setHandlerAtom } from "../atoms/handlerAtoms"
 import { ShapeAtomState, shapeAtom, setShapeAtom } from "../atoms/shapeAtoms"
-import { ViewPortState, viewPortAtom } from "../atoms/viewportAtoms"
+import { ViewPortState, setViewPortDataAtom, viewPortAtom } from "../atoms/viewportAtoms"
 import { MouseHandler } from "../handlers/MouseHandler"
 import { SetAtomFunc } from "../atoms/atoms"
 import { setDialogAtom } from "../atoms/dialogAtoms"
@@ -18,7 +18,8 @@ export type AllAtomsProps = {
 }
 
 export default function useAllAtoms(): AllAtomsProps {
-    const [viewPortData, setViewPortData] = useAtom(viewPortAtom)
+    const viewPortData = useAtomValue(viewPortAtom)
+    const setViewPortData = useSetAtom(setViewPortDataAtom)
     const shapeState = useAtomValue(shapeAtom)
     const setShapeState = useSetAtom(setShapeAtom)
     const handler = useAtomValue(handlerAtom)

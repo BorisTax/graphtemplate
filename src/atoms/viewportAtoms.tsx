@@ -16,7 +16,9 @@ export type ViewPortState = {
 }
 
 export const viewPortAtom = atom<ViewPortState>(getInitialState())
-export const setViewPortData = atom(null, (get, set, data: ViewPortState) => { set(viewPortAtom, { ...get(viewPortAtom), ...data }) })
+export const setViewPortDataAtom = atom(null, (get, set, data: ViewPortState) => { 
+    set(viewPortAtom, { ...get(viewPortAtom), ...data }) 
+})
 
 function getInitialState(): ViewPortState {
     return {

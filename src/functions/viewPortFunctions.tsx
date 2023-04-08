@@ -1,7 +1,6 @@
 import { ViewPortState } from "../atoms/viewportAtoms";
 import { SetViewPortFunc } from "../customHooks/useAllAtoms";
 import { Point, Rect } from "../types/properties";
-import { Rectangle } from "../utils/geometry";
 
 export function getPoint(e: any) {
   let rect = e.target.getBoundingClientRect();
@@ -131,7 +130,7 @@ export function addWindowListeners(viewPortData: ViewPortState, setViewPortData:
 
   document.body.oncontextmenu = () => true;
   document.addEventListener("load", () => {
-    ///zoomToTable({topLeft:{x: 0, y: 2400}, bottomRight: {x: 3000, y: 0}}, viewPortData)
+    ///setViewPortData(zoomToTable({topLeft:{x: 0, y: 2400}, bottomRight: {x: 3000, y: 0}}, viewPortData))
   });
   window.addEventListener("resize", () => {
     resize(viewPortData, setViewPortData, canvas);
@@ -153,8 +152,8 @@ export function addWindowListeners(viewPortData: ViewPortState, setViewPortData:
 
 function resize(viewPortData: ViewPortState, setViewPortData: SetViewPortFunc, canvas: HTMLCanvasElement) {
   const wHeight = window.innerHeight;
-  const cont = document.getElementById("canvas-container") || document.createElement("canvas")
-  const style = getComputedStyle(cont)
+  const cont = document.getElementById("canvas-container")
+  const style = cont ? getComputedStyle(cont) : {width: ""}
   const sw = Number.parseInt(style.width);
   let sh =
     window.innerHeight <= window.innerWidth
@@ -162,9 +161,9 @@ function resize(viewPortData: ViewPortState, setViewPortData: SetViewPortFunc, c
       : sw
   setViewPortData(setDimensions(sw, sh, viewPortData.realWidth, viewPortData)
   );
-  canvas.width = sw;
-  canvas.height = sh;
-  canvas.style.width = sw + "px";
-  canvas.style.height = sh + "px";
+  // canvas.width = sw;
+  // canvas.height = sh;
+  // canvas.style.width = sw + "px";
+  // canvas.style.height = sh + "px";
   return { sw, sh };
 }

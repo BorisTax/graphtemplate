@@ -12,7 +12,7 @@ export const HandlerActions = {
 
 export const handlerAtom = atom<MouseHandler>(new SelectHandler())
 export const prevHandlerAtom = atom<MouseHandler>(new SelectHandler())
-export const setHandlerAtom = atom(null, (get, set, action: AtomAction) => {set(prevHandlerAtom, action.payload.prevHandler); set(handlerAtom, handlerReducer(action, get, set))})
+export const setHandlerAtom = atom(null, (get, set, action: AtomAction) => {set(handlerAtom, handlerReducer(action, get, set))})
 export const setPrevHandlerAtom = atom(null, (get, set, _) => {set(handlerAtom, get(prevHandlerAtom))})
 
 function handlerReducer(action: AtomAction, get: Getter, set: Setter){
@@ -23,7 +23,8 @@ function handlerReducer(action: AtomAction, get: Getter, set: Setter){
             onCancel(get, set)
             return new SelectHandler()
         case HandlerActions.SET_HANDLER:
-            return action.payload
+            set(prevHandlerAtom, action.payload.prevHandler)
+            return action.payload.handler
         case HandlerActions.SET_PREV_HANDLER:
             return prevHandler
         default:

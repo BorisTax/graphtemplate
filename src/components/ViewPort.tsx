@@ -37,7 +37,7 @@ export default function ViewPort({ viewPortData, setViewPortData, shapeState, ha
     // eslint-disable-next-line
     [])
     const doubleClick = useDoubleClick(eventHandlers, (e: PointerEvent) => eventHandlers.onDoubleClick(e))
-    return <ToolBar id={"canvas-container"} noTitle={true} wide={false}>
+    return <ToolBar id={"canvas-container"} noTitle={true} wide={true}>
         <canvas ref={refCanvas} id="canvas" style={{ width: `${viewPortData.viewPortWidth}px`, height: `${viewPortData.viewPortHeight}px`, cursor: 'none' }} width={viewPortData.viewPortWidth} height={viewPortData.viewPortHeight}
             {...events}
             onClick={doubleClick}

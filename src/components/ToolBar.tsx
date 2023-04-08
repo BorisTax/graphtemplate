@@ -10,11 +10,12 @@ export type ToolBarProps = {
         children?: ReactNode | ReactNode[],
         extStyle?: {}
 }
-export default function ToolBar({ expanded = true, expandable = true, caption = "", noTitle = false, wide = false, children, extStyle = {} }: ToolBarProps) {
+export default function ToolBar({ id, expanded = true, expandable = true, caption = "", noTitle = false, wide = false, children, extStyle = {} }: ToolBarProps) {
         const [expand, setExpanded] = useState(expanded)
-        const id = useId()
+        const useid = useId()
+        const _id = id || useid
         const contents = expand ? children : <></>
-        return <div id={id} className={`${wide ? 'toolbar-wide' : 'toolbar'} noselect`} style={extStyle}>
+        return <div id={_id} className={`${wide ? 'toolbar-wide' : 'toolbar'} noselect`} style={extStyle}>
                 {!noTitle ?
                         <>
                                 <div className={`${expandable ? 'toolbar-header-expandable' : 'toolbar-header'}`} onClick={() => { if (expandable) setExpanded(!expand) }}>
