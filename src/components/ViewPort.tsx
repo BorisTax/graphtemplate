@@ -4,7 +4,6 @@ import { paint } from '../functions/drawFunctions';
 import { addWindowListeners, zoomToRect } from '../functions/viewPortFunctions';
 import useEvents from '../customHooks/useEvents.js';
 import useDoubleClick from '../customHooks/useDoubleClick.js';
-import { ViewPortState } from '../atoms/viewportAtoms';
 import { EventHandlers } from './ViewPortContainer';
 import { isMobile } from '../reducers/functions.js';
 import { AllAtomsProps } from '../customHooks/useAllAtoms';
@@ -20,17 +19,23 @@ export default function ViewPort({ viewPortData, setViewPortData, shapeState, ha
         const ctx: CanvasRenderingContext2D = refCanvas.current.getContext('2d')
 
         paint(ctx, {viewPortData, shapeState, handler})
-    }, [shapeState, viewPortData])
+    }, 
+    // eslint-disable-next-line
+    [shapeState, viewPortData])
     useLayoutEffect(() => {
         refCanvas.current.addEventListener("wheel", (e: WheelEvent) => {
             eventHandlers.onMouseWheel(e);
             e.preventDefault();
         })
         addWindowListeners(viewPortData, setViewPortData, refCanvas.current)
-    }, [])
+    }, 
+    // eslint-disable-next-line
+    [])
     useEffect(() => {
         setViewPortData(zoomToRect({ topLeft: { x: -100, y: 100 }, bottomRight: { x: 100, y: -100 } }, viewPortData));
-    }, [])
+    }, 
+    // eslint-disable-next-line
+    [])
     const doubleClick = useDoubleClick(eventHandlers, (e: PointerEvent) => eventHandlers.onDoubleClick(e))
     return <ToolBar id={"canvas-container"} noTitle={true} wide={false}>
         <canvas ref={refCanvas} id="canvas" style={{ width: `${viewPortData.viewPortWidth}px`, height: `${viewPortData.viewPortHeight}px`, cursor: 'none' }} width={viewPortData.viewPortWidth} height={viewPortData.viewPortHeight}

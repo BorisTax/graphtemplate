@@ -4,6 +4,7 @@ import { ShapeAtomState, shapeAtom, setShapeAtom } from "../atoms/shapeAtoms"
 import { ViewPortState, viewPortAtom } from "../atoms/viewportAtoms"
 import { MouseHandler } from "../handlers/MouseHandler"
 import { SetAtomFunc } from "../atoms/atoms"
+import { setDialogAtom } from "../atoms/dialogAtoms"
 
 export type SetViewPortFunc = (state: ViewPortState) => void
 export type AllAtomsProps = {
@@ -12,7 +13,8 @@ export type AllAtomsProps = {
     handler: MouseHandler,
     setHandler: SetAtomFunc,
     shapeState: ShapeAtomState,
-    setShapeState: SetAtomFunc
+    setShapeState: SetAtomFunc,
+    setDialog: SetAtomFunc
 }
 
 export default function useAllAtoms(): AllAtomsProps {
@@ -21,5 +23,6 @@ export default function useAllAtoms(): AllAtomsProps {
     const setShapeState = useSetAtom(setShapeAtom)
     const handler = useAtomValue(handlerAtom)
     const setHandler = useSetAtom(setHandlerAtom)
-    return {viewPortData, shapeState, handler, setViewPortData, setShapeState, setHandler}
+    const setDialog = useSetAtom(setDialogAtom)
+    return {viewPortData, shapeState, handler, setViewPortData, setShapeState, setHandler, setDialog}
 }

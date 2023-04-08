@@ -1,18 +1,18 @@
-import { cancelAtom } from "../../atoms/actionAtoms";
-import KeyHandler, { TKeyHandlerProps } from "./KeyHandler";
+import { Actions } from "../../atoms/actions";
+import { AllAtomsProps } from "../../customHooks/useAllAtoms";
+import KeyHandler from "./KeyHandler";
 
 export default class CancelKeyHandler extends KeyHandler {
-    keyPress(e: KeyboardEvent, props: TKeyHandlerProps) {
-        const { handler } = props
+    keyPress(e: KeyboardEvent, props: AllAtomsProps) {
         super.keyPress(e, props)
     };
 
-    keyUp(e: KeyboardEvent, props: TKeyHandlerProps) {
+    keyUp(e: KeyboardEvent, props: AllAtomsProps) {
         super.keyUp(e, props)
     };
 
-    keyDown(e: KeyboardEvent, props: TKeyHandlerProps) {
-        const {setAtom} = props
-        setAtom(cancelAtom)()
+    keyDown(e: KeyboardEvent, props: AllAtomsProps) {
+        const {setHandler} = props
+        setHandler(Actions.cancel())
     }
 }

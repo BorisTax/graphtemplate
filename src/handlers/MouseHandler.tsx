@@ -69,8 +69,8 @@ export class MouseHandler implements IHandler {
     wheel(props: TWheelProps) {
         const { deltaY = 0, curPoint, viewPortData, setViewPortData } = props
         let point = Geometry.screenToReal(curPoint.x, curPoint.y, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
-        if ((deltaY > 0) && (viewPortData.realWidth <= 9000)) setViewPortData(prevData => scale(1.2, point, prevData))
-        if ((deltaY < 0) && (viewPortData.pixelRatio >= 0.001)) setViewPortData(prevData => scale(1 / 1.2, point, prevData));
+        if ((deltaY > 0) && (viewPortData.realWidth <= 9000)) setViewPortData(scale(1.2, point, viewPortData))
+        if ((deltaY < 0) && (viewPortData.pixelRatio >= 0.001)) setViewPortData(scale(1 / 1.2, point, viewPortData));
     }
     touchDown(props: TTouchProps) {
         const { pointerId, curPoint, viewPortData } = props

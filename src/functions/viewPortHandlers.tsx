@@ -1,10 +1,9 @@
 import { getPoint } from "./viewPortFunctions";
 import { keyHandlers } from "../handlers/keyHandlers/options";
-import { TKeyHandlerProps } from "../handlers/keyHandlers/KeyHandler";
 import { AllAtomsProps } from "../customHooks/useAllAtoms";
 
 export function pointerMove(e: PointerEvent, props: AllAtomsProps) {
-    const { handler, viewPortData, setViewPortData  } = props
+    const { handler } = props
     const curPoint = getPoint(e)
     if (e.pointerType === "touch")
         handler.touchMove({ pointerId: e.pointerId, curPoint, ...props });
@@ -67,24 +66,24 @@ export function doubleClick(e: PointerEvent, props: AllAtomsProps) {
         handler.doubleClick({ button: e.button, curPoint, ...props, keys: { shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey } });
 }
 
-export function keyPress(e: KeyboardEvent, props: TKeyHandlerProps) {
+export function keyPress(e: KeyboardEvent, props: AllAtomsProps) {
     const handler = props.handler
     if (handler.keypress(e.code))
         if (e.target === document.body) e.preventDefault();
 };
 
-export function keyUp(e: KeyboardEvent, props: TKeyHandlerProps) {
+export function keyUp(e: KeyboardEvent, props: AllAtomsProps) {
     const handler = props.handler
     handler.cursor.setAdditional({ shiftKey: e.shiftKey, altKey: e.altKey });
 };
 
-export function keyDown(e: KeyboardEvent, props: TKeyHandlerProps) {
+export function keyDown(e: KeyboardEvent, props: AllAtomsProps) {
     const {handler} = props
     handler.cursor.setAdditional({ shiftKey: e.shiftKey, altKey: e.altKey });
     keyHandlers.forEach(key => {
         if (e.ctrlKey === key.ctrlKey && e.shiftKey === key.shiftKey && e.altKey === key.altKey && e.keyCode === key.keyCode) {
             const keyHandler = new key.handler()
-            keyHandler.keyDown(e, { handler})
+            keyHandler.keyDown(e, props)
             e.preventDefault();
         }
     })

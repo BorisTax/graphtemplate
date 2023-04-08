@@ -1,4 +1,4 @@
-import { Atom, Getter, Setter, WritableAtom } from "jotai"
+import { Getter, Setter } from "jotai"
 
 export type AtomAction = {
     type: string,

@@ -17,10 +17,12 @@ export type EventHandlers = {
 export default function ViewPortContainer() {
     const data = useAllAtoms()
     useEffect(() => {
-        window.addEventListener('keypress', (e: KeyboardEvent) => { keyPress(e, { handler: data.handler}) })
-        window.addEventListener('keydown', (e: KeyboardEvent) => { keyDown(e, { handler: data.handler}) })
-        window.addEventListener('keyup', (e: KeyboardEvent) => { keyUp(e, {handler: data.handler}) })
-    }, [])
+        window.addEventListener('keypress', (e: KeyboardEvent) => { keyPress(e, data) })
+        window.addEventListener('keydown', (e: KeyboardEvent) => { keyDown(e, data) })
+        window.addEventListener('keyup', (e: KeyboardEvent) => { keyUp(e, data) })
+    }, 
+    // eslint-disable-next-line
+    [])
     const eventHandlers: EventHandlers = {
         onPointerMove: (e: PointerEvent) => { pointerMove(e, data) },
         onPointerDown: (e: PointerEvent) => { pointerDown(e, data) },

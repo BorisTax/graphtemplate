@@ -12,7 +12,7 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
     activeShape: Shape | null = null
 
     move(props: TMouseProps) {
-        const { curPoint, viewPortData, setViewPortData, shapeState, keys } = props
+        const { curPoint, viewPortData, setViewPortData, shapeState } = props
         super.move(props);
         if (this.drag) {
             //if (!keys.shiftKey) appData.selectedPanels.clear()
@@ -60,7 +60,7 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
         setShapeState(Actions.updateShapes())
     }
     click(props: TMouseProps) {
-        const { button, curPoint, viewPortData, setViewPortData, setShapeState, shapeState, keys = {} } = props
+        const { button, viewPortData, setShapeState, shapeState, keys = {} } = props
         super.click(props);
         if (button !== 0) return
         const shapes = shapeState.shapes
@@ -82,7 +82,6 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
         setShapeState(Actions.updateShapes())
     }
     doubleClick(props: TMouseProps) {
-        const { button, curPoint, viewPortData, setViewPortData, setShapeState, shapeState, keys } = props
         super.doubleClick(props)
 
     }
@@ -100,12 +99,11 @@ export class SelectHandler extends MouseHandler implements IHandlerDraggable {
         this.down({...props, button: 0, keys: {shiftKey: false, ctrlKey: false, altKey: false}})
     }
     touchMove(props: TTouchProps) {
-        const { pointerId, curPoint, viewPortData, setViewPortData, setHandler } = props
+        const { viewPortData, setHandler } = props
         super.touchMove(props)
         const tm = viewPortData.touchManager
         if (tm.getTouchCount() > 1) {
             const diff = Geometry.distance(tm.touches[0].curPoint, tm.touches[1].curPoint)
-            const midPoint = Geometry.midPoint(tm.touches[0].curPoint, tm.touches[1].curPoint)
             const delta = tm.prevDiff - diff
             if (Math.abs(delta) > 10) {
                 const deltaY = Math.sign(delta)

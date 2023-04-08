@@ -3,7 +3,7 @@ import { MouseHandler } from "./MouseHandler";
 import { getRealRect, getScreenRect, setCurCoord, setTopLeft } from "../functions/viewPortFunctions";
 import { Point } from "../types/properties";
 import { IHandler, TMouseProps, TTouchProps } from "../interfaces/HandlerInterface";
-import { setPrevHandler } from "../atoms/handlerAtoms";
+import { Actions } from "../atoms/actions";
 export interface IPanHandler extends IHandler {
     startPoint: Point
 }
@@ -28,14 +28,14 @@ export class PanHandler extends MouseHandler implements IPanHandler {
         const yInRange = ((screenTopLeft.y < viewPortData.viewPortHeight / 2) && (dy < 0)) || ((screenBottomRight.y > viewPortData.viewPortHeight / 2) && (dy > 0));
         topLeft.x = xInRange ? viewPortData.topLeft.x - dx : viewPortData.topLeft.x;
         topLeft.y = yInRange ? viewPortData.topLeft.y - dy : viewPortData.topLeft.y;
-        setViewPortData(prevData => setTopLeft(topLeft, prevData))
+        setViewPortData(setTopLeft(topLeft, viewPortData))
         const cursorPoint = { x: xInRange ? this.startPoint.x : this.curPoint.x, y: yInRange ? this.startPoint.y : this.curPoint.y }
-        setViewPortData(prevData => setCurCoord(cursorPoint, curPoint, prevData))
+        setViewPortData(setCurCoord(cursorPoint, curPoint, viewPortData))
 
     }
     up(props: TMouseProps) {
-        const { button, setAtom } = props
-        if (button === 1 || button === 2) setAtom(setPrevHandler)()
+        const { button, setHandler} = props
+        if (button === 1 || button === 2) setHandler(Actions.setPrevHandler())
     }
     wheel() {
 
@@ -44,14 +44,14 @@ export class PanHandler extends MouseHandler implements IPanHandler {
         return super.keypress(code)
     }
     leave(props: TMouseProps) {
-        const { setAtom } = props
+        const { setHandler } = props
         super.leave(props);
-        setAtom(setPrevHandler)()
+        setHandler(Actions.setPrevHandler())
     }
     touchUp(props: TTouchProps) {
-        const { setAtom } = props
+        const { setHandler } = props
         super.touchUp(props)
-        setAtom(setPrevHandler)()
+        setHandler(Actions.setPrevHandler())
     }
     touchMove(props: TTouchProps) {
         this.move({...props, button: 0, keys: {shiftKey: false, ctrlKey: false, altKey: false}})
