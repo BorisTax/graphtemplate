@@ -39,8 +39,7 @@ export function paint(ctx: CanvasRenderingContext2D, props: PaintProps) {
     ctx.strokeRect(marginLeft, marginTop, viewPortWidth - marginRight - marginLeft, viewPortHeight - marginBottom - marginTop);
 
     ctx.lineWidth = 1;
-    if (isMobile() && handler.mouseOnScreen(viewPortData)) {
-        handler.cursor.setPosition(viewPortData.curRealPoint);
+    if (!isMobile()) {
         handler.cursor.draw(ctx, realRect, screenRect);
     }
 

@@ -32,7 +32,7 @@ export default function ViewPort({ viewPortData, setViewPortData, shapeState, ha
     // eslint-disable-next-line
     [])
     useEffect(() => {
-        setViewPortData(zoomToRect({ topLeft: { x: -100, y: 100 }, bottomRight: { x: 100, y: -100 } }, viewPortData));
+        
     }, 
     // eslint-disable-next-line
     [])

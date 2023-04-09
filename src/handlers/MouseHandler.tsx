@@ -14,6 +14,7 @@ export class MouseHandler implements IHandler {
     clickCount: number = 0
     curShape: Shape | null = null
     curPoint: Point = { x: 0, y: 0 }
+    screenPoint: Point = { x: 0, y: 0 }
     prevPoint: Point = { x: 0, y: 0 }
     statusBar: TStatusBar = [{ text: "", icons: [""] }];
     cursor: Cursor = new SelectCursor({ x: 0, y: 0 })
@@ -45,9 +46,10 @@ export class MouseHandler implements IHandler {
     }
     move(props: TMouseProps) {
         const { curPoint, viewPortData } = props
-        this.prevPoint = { ...this.curPoint }
-
+        this.screenPoint = curPoint
         this.curPoint = Geometry.screenToReal(curPoint.x, curPoint.y, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
+        this.prevPoint = { ...this.curPoint }
+        this.cursor.setPosition(this.curPoint)
         this.curPoint.x = Math.trunc(this.curPoint.x);
         this.curPoint.y = Math.trunc(this.curPoint.y);
         if (!this.mouseOnScreen(viewPortData)) {
@@ -56,7 +58,7 @@ export class MouseHandler implements IHandler {
         }
     }
     mouseOnScreen(viewPortData: ViewPortState) {
-        return !this.isOutRect(this.curPoint, viewPortData);
+        return !this.isOutRect(this.screenPoint, viewPortData);
     }
     down(props: TMouseProps) {
         const { curPoint, viewPortData } = props

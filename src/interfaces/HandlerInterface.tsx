@@ -24,6 +24,7 @@ export interface IHandler {
     clickCount : number;
     curShape : Shape | null;
     curPoint : Point
+    screenPoint: Point
     prevPoint : Point
     statusBar : TStatusBar
     cursor: Cursor

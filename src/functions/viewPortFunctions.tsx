@@ -124,7 +124,8 @@ export function addWindowListeners(viewPortData: ViewPortState, setViewPortData:
   const spinner = document.getElementById("spinner")
   if(spinner) spinner.style.display = "none";
   const { sw, sh } = resize(viewPortData, setViewPortData, canvas);
-  setViewPortData(setDimensions(sw, sh, 10000, viewPortData));
+  const newViewPortData = setDimensions(sw, sh, 10000, viewPortData);
+  setViewPortData(zoomToRect({ topLeft: { x: -100, y: 100 }, bottomRight: { x: 100, y: -100 } }, newViewPortData));
   //setViewPortData((prevData) => scale(2, { x: 0, y: 0 }, prevData));
 
 
