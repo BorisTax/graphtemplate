@@ -1,8 +1,6 @@
 import ShapeStyle from "../components/shapes/ShapeStyle"
 import { Point, TProperty, Rect } from "../types/properties"
 
-
-
 export type ShapeState = {
     selected?: boolean,
     selectable?: boolean,
@@ -20,11 +18,10 @@ export interface IShape {
     getStyle: () => ShapeStyle
     setStyle: (style: ShapeStyle) => void
     setState: (state: ShapeState) => void
-    isUnderCursor: (p: Point, pixelRatio: number) => boolean
-    isInSelectionRect: (rect: Rect) => {cross: boolean, full: boolean}
-    getDistance: (point: Point) => number
 }
 export interface IShapeSelection {
+    isUnderCursor: (p: Point, pixelRatio: number) => boolean
+    isInSelectionRect: (rect: Rect) => {cross: boolean, full: boolean}
     onAddToSelection: () => void
     onDeleteFromSelection: () => void
 }

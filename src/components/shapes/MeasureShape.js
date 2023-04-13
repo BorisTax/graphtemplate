@@ -3,7 +3,7 @@ import Shape from "./Shape";
 import ShapeStyle from './ShapeStyle';
 import { Color } from '../colors';
 import {PropertyTypes} from "./PropertyData";
-import RectangleShape from './RectangleShape';
+import RectangleShape from './geometry/RectangleShape';
 import TextShape from './TextShape';
 export default class MeasureShape extends Shape{
     constructor(model){

@@ -1,8 +1,8 @@
-import { IShape } from '../../interfaces/ShapeInterface';
-import Property from '../../types/Property';
-import { Point, PropertyTypes, Rect, ScreenRect } from '../../types/properties';
-import Geometry, { Rectangle, Coord2D, Line, Intersection } from '../../utils/geometry';
-import Shape from "./Shape";
+import { IShape } from '../../../interfaces/ShapeInterface';
+import Property from '../../../types/Property';
+import { Point, PropertyTypes, Rect, ScreenRect } from '../../../types/properties';
+import Geometry, { Rectangle, Coord2D, Line, Intersection } from '../../../utils/geometry';
+import Shape from "../Shape";
 
 interface IRectangle extends IShape {
     screenRect: ScreenRect
