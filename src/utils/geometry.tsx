@@ -1,3 +1,4 @@
+import { Rect } from "../types/properties"
 
 export type Point = {
     x: number
@@ -102,17 +103,31 @@ export class Arc {
 export class Rectangle {
     tl: Point
     br: Point
-    width: number
-    height: number
+    private _width: number
+    private _height: number
     constructor(topLeft: Point, bottomRight: Point) {
         this.tl = { ...topLeft };
         this.br = { ...bottomRight };
         this.tl.x = topLeft.x > bottomRight.x ? bottomRight.x : topLeft.x;
         this.tl.y = topLeft.y < bottomRight.y ? bottomRight.y : topLeft.y;
-        this.width = Math.abs(bottomRight.x - topLeft.x);
-        this.height = Math.abs(bottomRight.y - topLeft.y);
-        this.br.x = this.tl.x + this.width;
-        this.br.y = this.tl.y - this.height;
+        this._width = Math.abs(bottomRight.x - topLeft.x);
+        this._height = Math.abs(bottomRight.y - topLeft.y);
+        this.br.x = this.tl.x + this._width;
+        this.br.y = this.tl.y - this._height;
+    }
+    get width(){
+        return this._width
+    }
+    set width(w: number){
+        this._width = w
+        this.br.x = this.tl.x + w
+    }
+    get height(){
+        return this._height
+    }
+    set height(h: number){
+        this._height = h
+        this.br.y = this.tl.y - h
     }
 }
 
@@ -154,7 +169,7 @@ export class Intersection {
         if (!Geometry.pointOnLine(p, line.p1, line.p2)) return null;
         return p;
     }
-    static RectangleSLine(rectTopLeft: Point, rectBottomRight: Point, line: SLine): Point[] | null {
+    static RectangleSLine(rectTopLeft: Point, rectBottomRight: Point, line: SLine): Point[] {
         let lines = new Array(4);
         let points: Point[] = [];
         lines[0] = Line.byCoordinates(rectTopLeft.x, rectTopLeft.y, rectBottomRight.x, rectTopLeft.y);
@@ -174,7 +189,7 @@ export class Intersection {
         ps.forEach(p => { if (Geometry.isPointOnRayLine(line, p)) points.push(p) });
         return points;
     }
-    static RectangleRectangle(rectTopLeft1: Point, rectBottomRight1: Point, rectTopLeft2: Point, rectBottomRight2: Point): Point[] | null {
+    static RectangleRectangle(rectTopLeft1: Point, rectBottomRight1: Point, rectTopLeft2: Point, rectBottomRight2: Point): Point[] {
         const lines1 = [Line.byCoordinates(rectTopLeft1.x, rectTopLeft1.y, rectBottomRight1.x, rectTopLeft1.y),
         Line.byCoordinates(rectBottomRight1.x, rectTopLeft1.y, rectBottomRight1.x, rectBottomRight1.y),
         Line.byCoordinates(rectTopLeft1.x, rectBottomRight1.y, rectBottomRight1.x, rectBottomRight1.y),
@@ -424,10 +439,10 @@ export default class Geometry {
         let ry = topLeft.y - p.y / viewPortHeight * realHeight;
         return { x: rx, y: ry };
     }
-    static realToScreen(point: Point, realRect: Rectangle, screenRect: Rectangle) {
+    static realToScreen(point: Point, realRect: Rect, screenRect: Rect) {
         let ratio = realRect.width / screenRect.width;
-        let x = Math.trunc((point.x - realRect.tl.x) / ratio);
-        let y = -Math.trunc((point.y - realRect.tl.y) / ratio);
+        let x = Math.trunc((point.x - realRect.topLeft.x) / ratio);
+        let y = -Math.trunc((point.y - realRect.topLeft.y) / ratio);
         return { x, y };
     }
 }

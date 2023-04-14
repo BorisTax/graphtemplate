@@ -1,10 +1,10 @@
 import { IShapeSelection, IShape, ShapeState } from '../../interfaces/ShapeInterface';
-import { Point, Rect } from '../../types/properties';
+import { Point, Rect, TProperties } from '../../types/properties';
 import { Color } from '../colors';
 import ShapeStyle from './ShapeStyle';
 export default class Shape implements IShape, IShapeSelection{
     state: ShapeState = {selectable: true, selected: false, highlighted: false}
-    properties = new Map()
+    properties: Map<string, TProperties> = new Map()
     style: ShapeStyle = new ShapeStyle(Color.BLACK, ShapeStyle.SOLID)
     constructor(){
     }

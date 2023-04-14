@@ -24,15 +24,32 @@ export type TProperty<T> = {
     set?: (value: T) => void
 }
 
+export default class Property<T> {
+    name: string
+    type: PropertyTypes
+    value: T
+    constructor({ name, type, value, get, set }: TProperty<T>) {
+        this.name = name
+        this.type = type
+        this.value = value
+        if (get) this.get = get
+        if (set) this.set = set
+    }
+    get() { return this.value }
+    set(value: T) { this.value = value }
+}
+
+export type TProperties = Property<number> | Property<string> | Property<boolean> | Property<[]> | Property<Point>
+
 export type Point = {
     x: number,
     y: number
-  }
+}
 
 export type Rect = {
     topLeft: Point,
     bottomRight: Point
-    width?: number, height?: number
+    width: number, height: number
 }
 export type ScreenRect = {
     x: number,

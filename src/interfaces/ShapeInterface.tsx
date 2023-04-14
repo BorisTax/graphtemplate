@@ -1,5 +1,5 @@
 import ShapeStyle from "../components/shapes/ShapeStyle"
-import { Point, TProperty, Rect } from "../types/properties"
+import { Point, TProperty, Rect, TProperties } from "../types/properties"
 
 export type ShapeState = {
     selected?: boolean,
@@ -9,9 +9,9 @@ export type ShapeState = {
 }
 export interface IShape {
     state: ShapeState
-    properties: Map<string, TProperty<number|string|boolean|[]>>
+    properties: Map<string, TProperties>
     style: ShapeStyle
-    getProperties: () => Map<string, TProperty<number|string|boolean|[]>>
+    getProperties: () => Map<string, TProperties>
     refreshStyle: (ctx: CanvasRenderingContext2D) => void
     refresh: (realRect: Rect, screenRect: Rect) => void
     draw: (ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect) => void
