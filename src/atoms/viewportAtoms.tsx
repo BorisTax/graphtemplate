@@ -1,9 +1,12 @@
 import { atom } from 'jotai'
 import TouchManager from "../handlers/TouchManager";
+import Grid from '../components/shapes/Grid';
+import Shape from '../components/shapes/Shape';
 
 export type ViewPortState = {
     curRealPoint: { x: number, y: number },
     curViewportPoint: { x: number, y: number },
+    grid: Shape,
     gridStep: number, gridStepPixels?: number,
     marginTop: number, marginLeft: number, marginBottom: number, marginRight: number,
     maxPanWidth: number, maxPanHeight: number,
@@ -24,6 +27,7 @@ function getInitialState(): ViewPortState {
     return {
         curRealPoint: { x: 0, y: 0 },
         curViewportPoint: { x: 225, y: 225 },
+        grid: new Grid(),
         gridStep: 10,
         gridStepPixels: 1,
         marginTop: 0, marginLeft: 0, marginBottom: 0, marginRight: 0,

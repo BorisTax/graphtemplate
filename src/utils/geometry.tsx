@@ -1,5 +1,3 @@
-import { Rect } from "../types/properties"
-
 export type Point = {
     x: number
     y: number
@@ -101,33 +99,33 @@ export class Arc {
 }
 
 export class Rectangle {
-    tl: Point
-    br: Point
+    topLeft: Point
+    bottomRight: Point
     private _width: number
     private _height: number
     constructor(topLeft: Point, bottomRight: Point) {
-        this.tl = { ...topLeft };
-        this.br = { ...bottomRight };
-        this.tl.x = topLeft.x > bottomRight.x ? bottomRight.x : topLeft.x;
-        this.tl.y = topLeft.y < bottomRight.y ? bottomRight.y : topLeft.y;
+        this.topLeft = { ...topLeft };
+        this.bottomRight = { ...bottomRight };
+        this.topLeft.x = topLeft.x > bottomRight.x ? bottomRight.x : topLeft.x;
+        this.topLeft.y = topLeft.y < bottomRight.y ? bottomRight.y : topLeft.y;
         this._width = Math.abs(bottomRight.x - topLeft.x);
         this._height = Math.abs(bottomRight.y - topLeft.y);
-        this.br.x = this.tl.x + this._width;
-        this.br.y = this.tl.y - this._height;
+        this.bottomRight.x = this.topLeft.x + this._width;
+        this.bottomRight.y = this.topLeft.y - this._height;
     }
     get width(){
         return this._width
     }
     set width(w: number){
         this._width = w
-        this.br.x = this.tl.x + w
+        this.bottomRight.x = this.topLeft.x + w
     }
     get height(){
         return this._height
     }
     set height(h: number){
         this._height = h
-        this.br.y = this.tl.y - h
+        this.bottomRight.y = this.topLeft.y - h
     }
 }
 
@@ -319,11 +317,11 @@ export default class Geometry {
 
 
     static isRectIntersects(rect1: Rectangle, rect2: Rectangle): boolean {
-        const d = { p1: rect1.tl, p2: rect1.br }
-        const l1 = { p1: rect2.tl, p2: { x: rect2.tl.x, y: rect2.br.y } }
-        const l2 = { p1: rect2.tl, p2: { x: rect2.br.x, y: rect2.tl.y } }
-        const l3 = { p1: rect2.br, p2: { x: rect2.tl.x, y: rect2.br.y } }
-        const l4 = { p1: rect2.br, p2: { x: rect2.br.x, y: rect2.tl.y } }
+        const d = { p1: rect1.topLeft, p2: rect1.bottomRight }
+        const l1 = { p1: rect2.topLeft, p2: { x: rect2.topLeft.x, y: rect2.bottomRight.y } }
+        const l2 = { p1: rect2.topLeft, p2: { x: rect2.bottomRight.x, y: rect2.topLeft.y } }
+        const l3 = { p1: rect2.bottomRight, p2: { x: rect2.topLeft.x, y: rect2.bottomRight.y } }
+        const l4 = { p1: rect2.bottomRight, p2: { x: rect2.bottomRight.x, y: rect2.topLeft.y } }
         return [
             Geometry.linesIntersection(d, l1),
             Geometry.linesIntersection(d, l2),
@@ -334,15 +332,15 @@ export default class Geometry {
 
     static rectInRect(innerRect: Rectangle, outerRect: Rectangle): boolean {
         return [
-            Geometry.pointInRect(innerRect.tl, outerRect.tl, outerRect.br, true),
-            Geometry.pointInRect({ x: innerRect.tl.x, y: innerRect.br.y }, outerRect.tl, outerRect.br, true),
-            Geometry.pointInRect({ x: innerRect.br.x, y: innerRect.tl.y }, outerRect.tl, outerRect.br, true),
-            Geometry.pointInRect(innerRect.br, outerRect.tl, outerRect.br, true),
+            Geometry.pointInRect(innerRect.topLeft, outerRect.topLeft, outerRect.bottomRight, true),
+            Geometry.pointInRect({ x: innerRect.topLeft.x, y: innerRect.bottomRight.y }, outerRect.topLeft, outerRect.bottomRight, true),
+            Geometry.pointInRect({ x: innerRect.bottomRight.x, y: innerRect.topLeft.y }, outerRect.topLeft, outerRect.bottomRight, true),
+            Geometry.pointInRect(innerRect.bottomRight, outerRect.topLeft, outerRect.bottomRight, true),
         ].every(p => p);
     }
     static rectToRectDist(rect1: Rectangle, rect2: Rectangle): number {
-        const c1 = { x: (rect1.tl.x + rect1.br.x) / 2, y: (rect1.tl.y + rect1.br.y) / 2 }
-        const c2 = { x: (rect2.tl.x + rect2.br.x) / 2, y: (rect2.tl.y + rect2.br.y) / 2 }
+        const c1 = { x: (rect1.topLeft.x + rect1.bottomRight.x) / 2, y: (rect1.topLeft.y + rect1.bottomRight.y) / 2 }
+        const c2 = { x: (rect2.topLeft.x + rect2.bottomRight.x) / 2, y: (rect2.topLeft.y + rect2.bottomRight.y) / 2 }
         return Geometry.distance(c1, c2)
     }
 
@@ -439,7 +437,7 @@ export default class Geometry {
         let ry = topLeft.y - p.y / viewPortHeight * realHeight;
         return { x: rx, y: ry };
     }
-    static realToScreen(point: Point, realRect: Rect, screenRect: Rect) {
+    static realToScreen(point: Point, realRect: Rectangle, screenRect: Rectangle) {
         let ratio = realRect.width / screenRect.width;
         let x = Math.trunc((point.x - realRect.topLeft.x) / ratio);
         let y = -Math.trunc((point.y - realRect.topLeft.y) / ratio);

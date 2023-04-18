@@ -1,23 +1,25 @@
 import { IShapeSelection, IShape, ShapeState } from '../../interfaces/ShapeInterface';
-import { Point, Rect, TProperties } from '../../types/properties';
+import { Point, TProperties } from '../../types/properties';
+import { Rectangle } from '../../utils/geometry';
 import { Color } from '../colors';
 import ShapeStyle from './ShapeStyle';
 export default class Shape implements IShape, IShapeSelection{
     state: ShapeState = {selectable: true, selected: false, highlighted: false}
     properties: Map<string, TProperties> = new Map()
     style: ShapeStyle = new ShapeStyle(Color.BLACK, ShapeStyle.SOLID)
+    defaultStyle: ShapeStyle
     constructor(){
+        this.defaultStyle = new ShapeStyle(this.style.getColor(), this.style.getStroke(), this.style.getWidth())
     }
-
     getProperties() {
         return this.properties
       }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect) {
+    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
         this.refresh(realRect, screenRect);
         this.refreshStyle(ctx)
     }
-    refresh(realRect: Rect, screenRect: Rect){};
+    refresh(realRect: Rectangle, screenRect: Rectangle){};
 
     refreshStyle(ctx: CanvasRenderingContext2D) {
         this.setState(this.state)
@@ -49,7 +51,7 @@ export default class Shape implements IShape, IShapeSelection{
             
             return;
         } else {
-            this.setStyle(ShapeStyle.DEFAULT_STYLE);
+            this.setStyle(this.defaultStyle);
             if (this.state.highlighted) this.setStyle(ShapeStyle.HIGHLIGHTED_STYLE)
         }
         if (this.state.highlighted) this.setStyle(ShapeStyle.HIGHLIGHTED_STYLE);
@@ -64,7 +66,7 @@ export default class Shape implements IShape, IShapeSelection{
     isUnderCursor(p: Point, pixelRatio: number){
         return false
     }
-    isInSelectionRect({topLeft, bottomRight}: Rect): {cross: boolean, full: boolean} {
+    isInSelectionRect({topLeft, bottomRight}: Rectangle): {cross: boolean, full: boolean} {
         return { cross: false, full: false };
     }
 }

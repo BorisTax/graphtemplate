@@ -1,5 +1,6 @@
 import ShapeStyle from "../components/shapes/ShapeStyle"
-import { Point, TProperty, Rect, TProperties } from "../types/properties"
+import { Point, TProperty, TProperties } from "../types/properties"
+import { Rectangle } from "../utils/geometry"
 
 export type ShapeState = {
     selected?: boolean,
@@ -13,15 +14,15 @@ export interface IShape {
     style: ShapeStyle
     getProperties: () => Map<string, TProperties>
     refreshStyle: (ctx: CanvasRenderingContext2D) => void
-    refresh: (realRect: Rect, screenRect: Rect) => void
-    draw: (ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect) => void
+    refresh: (realRect: Rectangle, screenRect: Rectangle) => void
+    draw: (ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) => void
     getStyle: () => ShapeStyle
     setStyle: (style: ShapeStyle) => void
     setState: (state: ShapeState) => void
 }
 export interface IShapeSelection {
     isUnderCursor: (p: Point, pixelRatio: number) => boolean
-    isInSelectionRect: (rect: Rect) => {cross: boolean, full: boolean}
+    isInSelectionRect: (rect: Rectangle) => {cross: boolean, full: boolean}
     onAddToSelection: () => void
     onDeleteFromSelection: () => void
 }

@@ -1,5 +1,5 @@
 import { IShape } from '../../../interfaces/ShapeInterface';
-import Property, { Point, PropertyTypes, Rect, ScreenRect, TProperties } from '../../../types/properties';
+import Property, { Point, PropertyTypes, ScreenRect, TProperties } from '../../../types/properties';
 import Geometry, { Rectangle, Line, Intersection } from '../../../utils/geometry';
 import Shape from "../Shape";
 
@@ -12,10 +12,10 @@ export default class RectangleShape extends Shape implements IRectangle {
     constructor(model: Rectangle) {
         super();
         this.properties = new Map<string, TProperties>()
-        const width = model.br.x - model.tl.x
-        const height = model.tl.y - model.br.y
-        this.properties.set("topLeft", new Property<Point>({ name: "topLeft", type: PropertyTypes.POINT, value: model.tl }))
-        this.properties.set("bottomRight", new Property<Point>({ name: "bottomRight", type: PropertyTypes.POINT, value: model.br }))
+        const width = model.bottomRight.x - model.topLeft.x
+        const height = model.topLeft.y - model.bottomRight.y
+        this.properties.set("topLeft", new Property<Point>({ name: "topLeft", type: PropertyTypes.POINT, value: model.topLeft }))
+        this.properties.set("bottomRight", new Property<Point>({ name: "bottomRight", type: PropertyTypes.POINT, value: model.bottomRight }))
         this.properties.set("width", new Property<number>({
             name: "width",
             type: PropertyTypes.NUMBER,
@@ -48,7 +48,7 @@ export default class RectangleShape extends Shape implements IRectangle {
         }))
     }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect, fill = false) {
+    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, fill = false) {
         super.draw(ctx, realRect, screenRect)
         const width = this.properties.get("width")
         if (fill) {
@@ -56,7 +56,7 @@ export default class RectangleShape extends Shape implements IRectangle {
         }
         ctx.strokeRect(this.screenRect.x, this.screenRect.y, this.screenRect.width, this.screenRect.height);
     }
-    refresh(realRect: Rect, screenRect: Rect) {
+    refresh(realRect: Rectangle, screenRect: Rectangle) {
         const tl: Point = this.properties.get("topLeft")?.value as Point
         const br: Point = this.properties.get("bottomRight")?.value as Point
         const tl0 = Geometry.realToScreen(tl, realRect, screenRect);
@@ -67,7 +67,7 @@ export default class RectangleShape extends Shape implements IRectangle {
         this.screenRect.height = br0.y - tl0.y
     }
     
-    isInSelectionRect({topLeft, bottomRight}: Rect): {cross: boolean, full: boolean} {
+    isInSelectionRect({topLeft, bottomRight}: Rectangle): {cross: boolean, full: boolean} {
         const tl: Point = this.properties.get("topLeft")?.value as Point
         const br: Point = this.properties.get("bottomRight")?.value as Point
         const inRect = [Geometry.pointInRect(tl, topLeft, bottomRight),

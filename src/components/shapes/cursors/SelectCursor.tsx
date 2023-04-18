@@ -1,9 +1,9 @@
-import { Rect } from "../../../types/properties";
+import { Rectangle } from "../../../utils/geometry";
 import Cursor from "./Cursor";
 
 export default class SelectCursor extends Cursor {
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect) {
+    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
         this.refresh(realRect, screenRect);
         ctx.strokeStyle = this.getStyle().getColor();
         ctx.setLineDash(this.getStyle().getStroke());

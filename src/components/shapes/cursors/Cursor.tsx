@@ -1,6 +1,6 @@
 import { TAddKeys } from "../../../handlers/keyHandlers/options";
-import { Point, Rect } from "../../../types/properties";
-import Geometry from "../../../utils/geometry";
+import { Point } from "../../../types/properties";
+import Geometry, { Rectangle } from "../../../utils/geometry";
 import { Color } from "../../colors";
 import ShapeStyle from "../ShapeStyle";
 export interface ICursor {
@@ -8,8 +8,8 @@ export interface ICursor {
     screenPoint: Point
     keys: TAddKeys
     style: ShapeStyle
-    refresh: (realRect: Rect, screenRect: Rect) => void
-    draw: (ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect) => void
+    refresh: (realRect: Rectangle, screenRect: Rectangle) => void
+    draw: (ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) => void
     setPosition: (point: Point) => void
     setAdditional: (keys: TAddKeys) => void
 }
@@ -23,11 +23,11 @@ export default class Cursor implements ICursor{
         this.point = point;
     }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect){
+    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle){
 
     }
 
-    refresh(realRect: Rect,  screenRect: Rect){
+    refresh(realRect: Rectangle,  screenRect: Rectangle){
         this.screenPoint = Geometry.realToScreen(this.point,realRect,screenRect);
     }
 

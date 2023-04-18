@@ -1,5 +1,6 @@
 import { IShapeSelection, IShape, ShapeState } from '../../interfaces/ShapeInterface';
-import { Point, Rect } from '../../types/properties';
+import { Point } from '../../types/properties';
+import { Rectangle } from '../../utils/geometry';
 import { Color } from '../colors';
 import Shape from './Shape';
 import ShapeStyle from './ShapeStyle';
@@ -12,11 +13,11 @@ export default class SelectableShape extends Shape implements IShapeSelection{
         return this.properties
       }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect) {
+    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
         this.refresh(realRect, screenRect);
         this.refreshStyle(ctx)
     }
-    refresh(realRect: Rect, screenRect: Rect){};
+    refresh(realRect: Rectangle, screenRect: Rectangle){};
 
     refreshStyle(ctx: CanvasRenderingContext2D) {
         this.setState(this.state)
@@ -63,7 +64,7 @@ export default class SelectableShape extends Shape implements IShapeSelection{
     isUnderCursor(p: Point, pixelRatio: number){
         return false
     }
-    isInSelectionRect({topLeft, bottomRight}: Rect): {cross: boolean, full: boolean} {
+    isInSelectionRect({topLeft, bottomRight}: Rectangle): {cross: boolean, full: boolean} {
         return { cross: false, full: false };
     }
 }

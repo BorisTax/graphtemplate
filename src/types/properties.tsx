@@ -46,11 +46,6 @@ export type Point = {
     y: number
 }
 
-export type Rect = {
-    topLeft: Point,
-    bottomRight: Point
-    width: number, height: number
-}
 export type ScreenRect = {
     x: number,
     y: number

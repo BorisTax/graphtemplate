@@ -1,6 +1,7 @@
 import { ViewPortState } from "../atoms/viewportAtoms";
 import { SetViewPortFunc } from "../customHooks/useAllAtoms";
-import { Point, Rect } from "../types/properties";
+import { Point } from "../types/properties";
+import { Rectangle } from "../utils/geometry";
 
 export function getPoint(e: any) {
   let rect = e.target.getBoundingClientRect();
@@ -15,7 +16,7 @@ export function scale(factor: number, anchor: Point, viewPortData: ViewPortState
   const realHeight = viewPortHeight * pixelRatio;
   var dx = anchor.x - topLeft.x;
   var dy = anchor.y - topLeft.y;
-  if (realHeight < 500) return { ...viewPortData };
+  //if (realHeight < 500) return { ...viewPortData };
   dx = dx * factor;
   dy = dy * factor;
   //new topLeft
@@ -55,22 +56,12 @@ export function setTopLeft(topLeft: Point, viewPortData: ViewPortState) {
   bottomRight.y = topLeft.y - viewPortData.realHeight;
   return { ...viewPortData, topLeft, bottomRight };
 }
-export function getRealRect(topLeft: Point, bottomRight: Point): Rect {
-  return {
-    topLeft,
-    bottomRight,
-    width: bottomRight.x - topLeft.x,
-    height: topLeft.y - bottomRight.y
-  }
+export function getRealRect(topLeft: Point, bottomRight: Point): Rectangle {
+  return new Rectangle(topLeft, bottomRight)
 }
 
-export function getScreenRect(viewPortWidth: number, viewPortHeight: number): Rect {
-  return {
-    topLeft: {x: 0, y: 0},
-    width: viewPortWidth,
-    height: viewPortHeight,
-    bottomRight: {x: viewPortWidth, y: viewPortHeight}
-  }
+export function getScreenRect(viewPortWidth: number, viewPortHeight: number): Rectangle {
+  return new Rectangle({x: 0, y: 0}, {x: viewPortWidth, y: viewPortHeight})
 }
 
 export function getRealAndScreenRect(viewPortData: ViewPortState) {
@@ -97,7 +88,7 @@ export function setDimensions(width: number, height: number, realWidth: number, 
   };
 }
 
-export function zoomToRect({ topLeft, bottomRight }: Rect, viewPortData: ViewPortState): ViewPortState {
+export function zoomToRect({ topLeft, bottomRight }: Rectangle, viewPortData: ViewPortState): ViewPortState {
   const rectHeight = topLeft.y - bottomRight.y
   const rectWidth = bottomRight.x - topLeft.x
   const ratio = rectWidth / rectHeight
@@ -125,7 +116,8 @@ export function addWindowListeners(viewPortData: ViewPortState, setViewPortData:
   if(spinner) spinner.style.display = "none";
   const { sw, sh } = resize(viewPortData, setViewPortData, canvas);
   const newViewPortData = setDimensions(sw, sh, 10000, viewPortData);
-  setViewPortData(zoomToRect({ topLeft: { x: -100, y: 100 }, bottomRight: { x: 100, y: -100 } }, newViewPortData));
+  const rect: Rectangle = new Rectangle({ x: -100, y: 100 }, { x: 100, y: -100 })
+  setViewPortData(zoomToRect(rect, newViewPortData));
   //setViewPortData((prevData) => scale(2, { x: 0, y: 0 }, prevData));
 
 

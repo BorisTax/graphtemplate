@@ -1,5 +1,5 @@
-import Property, { Point, PropertyTypes, Rect } from "../../../types/properties";
-import Geometry, { Intersection, SLine } from "../../../utils/geometry";
+import Property, { Point, PropertyTypes } from "../../../types/properties";
+import Geometry, { Intersection, Rectangle, SLine } from "../../../utils/geometry";
 import Shape from "../Shape";
 export default class SLineShape extends Shape {
     model: SLine
@@ -12,7 +12,7 @@ export default class SLineShape extends Shape {
         this.properties.set("b", new Property({ name: "b", type: PropertyTypes.NUMBER, value: line.b, set: (v: number) => { this.model.b = v }}))
         this.properties.set("c", new Property({ name: "c", type: PropertyTypes.NUMBER, value: line.c, set: (v: number) => { this.model.c = v }}))
     }
-    draw(ctx: CanvasRenderingContext2D, realRect: Rect, screenRect: Rect) {
+    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
         super.draw(ctx, realRect, screenRect)
         if (this.p0 === null || this.p1 === null) return;
         ctx.beginPath();
@@ -20,7 +20,7 @@ export default class SLineShape extends Shape {
         ctx.lineTo(this.p1.x + 0.5, this.p1.y + 0.5);
         ctx.stroke();
     }
-    refresh(realRect: Rect, screenRect: Rect) {
+    refresh(realRect: Rectangle, screenRect: Rectangle) {
         let center = { x: realRect.topLeft.x + realRect.width / 2, y: realRect.topLeft.y - realRect.height / 2 };
         let radius = Geometry.distance(realRect.topLeft, center);
         let p = Intersection.CircleSLine({ center, radius }, this.model);

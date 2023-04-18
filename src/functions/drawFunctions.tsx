@@ -3,7 +3,7 @@ import { ViewPortState } from '../atoms/viewportAtoms';
 import ShapeStyle from '../components/shapes/ShapeStyle';
 import { IHandler } from '../interfaces/HandlerInterface';
 import { isMobile } from '../reducers/functions';
-import { Rect } from '../types/properties';
+import { Rectangle } from '../utils/geometry';
 import { getRealRect, getScreenRect } from './viewPortFunctions'
 export type PaintProps = {
     viewPortData: ViewPortState,
@@ -20,8 +20,9 @@ export function paint(ctx: CanvasRenderingContext2D, props: PaintProps) {
     ctx.fillRect(0, 0, viewPortData.viewPortWidth, viewPortData.viewPortHeight);
     //ctx.strokeRect(0, 0, viewPortData.viewPortWidth-1, viewPortData.viewPortHeight-1);
     const { topLeft, bottomRight, viewPortWidth, viewPortHeight, marginRight, marginTop, marginLeft, marginBottom } = viewPortData;
-    const realRect: Rect = getRealRect(topLeft, bottomRight)
-    const screenRect: Rect = getScreenRect(viewPortWidth, viewPortHeight)
+    const realRect: Rectangle = getRealRect(topLeft, bottomRight)
+    const screenRect: Rectangle = getScreenRect(viewPortWidth, viewPortHeight)
+    viewPortData.grid.draw(ctx, realRect, screenRect)
     for (let shape of shapeState.shapes) {
         shape.draw(ctx, realRect, screenRect);
     }
