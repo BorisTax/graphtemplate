@@ -35,7 +35,7 @@ export default class Shape implements IShape, IShapeSelection{
 
     setStyle(style: ShapeStyle) {
         this.style = style;
-
+        this.defaultStyle = style;
     }
 
     onAddToSelection(){

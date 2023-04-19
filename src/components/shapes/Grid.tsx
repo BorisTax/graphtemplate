@@ -22,7 +22,8 @@ export default class Grid extends Shape {
     draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, viewPortData?: ViewPortState) {
         this.refresh(realRect, screenRect);
         this.refreshStyle(ctx)
-        this.drawGrid(ctx, realRect, screenRect, viewPortData as ViewPortState)
+        const gridNumbers: GridNumbers = this.drawGrid(ctx, realRect, screenRect, viewPortData as ViewPortState)
+        this.drawCoordinates(ctx, realRect, screenRect, viewPortData as ViewPortState, gridNumbers)
         this.xAxe.draw(ctx, realRect, screenRect)
         this.yAxe.draw(ctx, realRect, screenRect)
     }
@@ -90,9 +91,10 @@ export default class Grid extends Shape {
         return { gridPointsX, gridPointsY, gridNumbersX, gridNumbersY }
     }
     drawCoordinates(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, viewPortData: ViewPortState, { gridPointsX, gridPointsY, gridNumbersX, gridNumbersY }: GridNumbers) {
+        const zeroPoint = Geometry.realToScreen({ x: 0, y: 0 }, realRect, screenRect)
         ctx.font = "10px sans-serif";
         ctx.strokeStyle = "black";
-        let i = 0;
+        let i = -1;
         let format = 0;
         let w;
         if (viewPortData.gridStep >= 0.001) { format = 3; }
@@ -108,22 +110,30 @@ export default class Grid extends Shape {
         }
         w = ctx.measureText(s0).width;
         for (let x of gridPointsX) {
+            i++;
             if (x === null) continue;
+            if (gridNumbersX[i] === 0) continue
             if (x > 0 && x < screenRect.width) {
                 let s = gridNumbersX[i].toFixed(format);
+                const { width, actualBoundingBoxAscent, fontBoundingBoxDescent } = ctx.measureText(s)
+                const height = actualBoundingBoxAscent + fontBoundingBoxDescent
                 let d = 1;
                 let r = w / viewPortData.gridStepPixels;
                 if (r >= 1) d = 2;
                 if (r >= 1.5) d = 5;
+                let yy = zeroPoint.y
+                if (zeroPoint.y < 0) yy = height
+                if (zeroPoint.y > screenRect.height) yy = screenRect.height 
                 if (Math.round(gridNumbersX[i] / viewPortData.gridStep) % d === 0)
-                    ctx.strokeText(s, x - ctx.measureText(s).width / 2, - 5);
+                    ctx.strokeText(s, x - width / 2, yy);
             }
-            i++;
         }
-        i = 0;
+        i = -1;
         for (let y of gridPointsY) {
+            i++;
             if (y === null) continue;
             if (y > 0 && y < screenRect.height) {
+                if (gridNumbersY[i] === 0) continue
                 let s = gridNumbersY[i].toFixed(format);
                 w = ctx.measureText(s).width;
                 let h = ctx.measureText("12").width;
@@ -131,10 +141,12 @@ export default class Grid extends Shape {
                 let r = h / viewPortData.gridStepPixels;
                 if (r > 0.8 && r < 1.5) d = 2;
                 if (r >= 1.5) d = 5;
+                let xx = zeroPoint.x - w
+                if (zeroPoint.x < 0) xx = 0
+                if (zeroPoint.x > screenRect.width) xx = screenRect.width - w
                 if (Math.round(gridNumbersY[i] / viewPortData.gridStep) % d === 0)
-                    ctx.strokeText(s, - w, y + h / 3);
+                    ctx.strokeText(s, xx, y + h / 3);
             }
-            i++;
         }
     }
 
