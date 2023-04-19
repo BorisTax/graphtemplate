@@ -1,3 +1,4 @@
+import { ViewPortState } from '../../atoms/viewportAtoms';
 import { IShapeSelection, IShape, ShapeState } from '../../interfaces/ShapeInterface';
 import { Point, TProperties } from '../../types/properties';
 import { Rectangle } from '../../utils/geometry';
@@ -15,7 +16,7 @@ export default class Shape implements IShape, IShapeSelection{
         return this.properties
       }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
+    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, viewPortData?: ViewPortState) {
         this.refresh(realRect, screenRect);
         this.refreshStyle(ctx)
     }

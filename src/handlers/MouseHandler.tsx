@@ -47,11 +47,11 @@ export class MouseHandler implements IHandler {
     move(props: TMouseProps) {
         const { curPoint, viewPortData } = props
         this.screenPoint = curPoint
+        this.curPoint.x = Math.trunc(this.curPoint.x);
+        this.curPoint.y = Math.trunc(this.curPoint.y);
         this.curPoint = Geometry.screenToReal(curPoint, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
         this.prevPoint = { ...this.curPoint }
         this.cursor.setPosition(this.curPoint)
-        this.curPoint.x = Math.trunc(this.curPoint.x);
-        this.curPoint.y = Math.trunc(this.curPoint.y);
         if (!this.mouseOnScreen(viewPortData)) {
             this.curPoint.x = this.prevPoint.x;
             this.curPoint.y = this.prevPoint.y;

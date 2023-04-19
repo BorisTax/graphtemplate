@@ -22,7 +22,7 @@ export function paint(ctx: CanvasRenderingContext2D, props: PaintProps) {
     const { topLeft, bottomRight, viewPortWidth, viewPortHeight, marginRight, marginTop, marginLeft, marginBottom } = viewPortData;
     const realRect: Rectangle = getRealRect(topLeft, bottomRight)
     const screenRect: Rectangle = getScreenRect(viewPortWidth, viewPortHeight)
-    viewPortData.grid.draw(ctx, realRect, screenRect)
+    viewPortData.grid.draw(ctx, realRect, screenRect, viewPortData)
     for (let shape of shapeState.shapes) {
         shape.draw(ctx, realRect, screenRect);
     }

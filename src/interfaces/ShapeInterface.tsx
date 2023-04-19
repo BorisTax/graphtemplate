@@ -1,3 +1,4 @@
+import { ViewPortState } from "../atoms/viewportAtoms"
 import ShapeStyle from "../components/shapes/ShapeStyle"
 import { Point, TProperty, TProperties } from "../types/properties"
 import { Rectangle } from "../utils/geometry"
@@ -15,7 +16,7 @@ export interface IShape {
     getProperties: () => Map<string, TProperties>
     refreshStyle: (ctx: CanvasRenderingContext2D) => void
     refresh: (realRect: Rectangle, screenRect: Rectangle) => void
-    draw: (ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) => void
+    draw: (ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, viewPortData?: ViewPortState) => void
     getStyle: () => ShapeStyle
     setStyle: (style: ShapeStyle) => void
     setState: (state: ShapeState) => void

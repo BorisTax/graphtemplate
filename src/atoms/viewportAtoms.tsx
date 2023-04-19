@@ -7,7 +7,7 @@ export type ViewPortState = {
     curRealPoint: { x: number, y: number },
     curViewportPoint: { x: number, y: number },
     grid: Shape,
-    gridStep: number, gridStepPixels?: number,
+    gridStep: number, gridStepPixels: number,
     marginTop: number, marginLeft: number, marginBottom: number, marginRight: number,
     maxPanWidth: number, maxPanHeight: number,
     ratio: number, pixelRatio: number,

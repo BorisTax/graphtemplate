@@ -48,12 +48,9 @@ export default class RectangleShape extends Shape implements IRectangle {
         }))
     }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, fill = false) {
+    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
         super.draw(ctx, realRect, screenRect)
         const width = this.properties.get("width")
-        if (fill) {
-            ctx.fillRect(this.screenRect.x, this.screenRect.y, this.screenRect.width, this.screenRect.height);
-        }
         ctx.strokeRect(this.screenRect.x, this.screenRect.y, this.screenRect.width, this.screenRect.height);
     }
     refresh(realRect: Rectangle, screenRect: Rectangle) {
