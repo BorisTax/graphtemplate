@@ -1,3 +1,4 @@
+import { ViewPortState } from "../../../atoms/viewportAtoms";
 import Property, { Point, PropertyTypes } from "../../../types/properties";
 import Geometry, { Intersection, Rectangle, SLine } from "../../../utils/geometry";
 import Shape from "../Shape";
@@ -12,8 +13,8 @@ export default class SLineShape extends Shape {
         this.properties.set("b", new Property({ name: "b", type: PropertyTypes.NUMBER, value: line.b, set: (v: number) => { this.model.b = v }}))
         this.properties.set("c", new Property({ name: "c", type: PropertyTypes.NUMBER, value: line.c, set: (v: number) => { this.model.c = v }}))
     }
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
-        super.draw(ctx, realRect, screenRect)
+    draw(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState) {
+        super.draw(ctx, viewPortData)
         if (this.p0 === null || this.p1 === null) return;
         ctx.beginPath();
         ctx.moveTo(this.p0.x + 0.5, this.p0.y + 0.5);

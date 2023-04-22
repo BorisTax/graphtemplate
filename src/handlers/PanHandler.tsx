@@ -19,8 +19,8 @@ export class PanHandler extends MouseHandler implements IPanHandler {
         let dx = this.curPoint.x - this.startPoint.x;
         let dy = this.curPoint.y - this.startPoint.y;
         const topLeft = { x: 0, y: 0 }
-        topLeft.x = viewPortData.topLeft.x - dx;
-        topLeft.y = viewPortData.topLeft.y - dy;
+        topLeft.x = viewPortData.realRect.topLeft.x - dx;
+        topLeft.y = viewPortData.realRect.topLeft.y - dy;
         const newData = setTopLeft(topLeft, viewPortData)
         const cursorPoint = { x: this.startPoint.x, y: this.startPoint.y }
         setViewPortData(setCurCoord(cursorPoint, curPoint, newData))

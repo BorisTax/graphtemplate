@@ -1,3 +1,4 @@
+import { ViewPortState } from '../../atoms/viewportAtoms';
 import { IShapeSelection, IShape, ShapeState } from '../../interfaces/ShapeInterface';
 import { Point } from '../../types/properties';
 import { Rectangle } from '../../utils/geometry';
@@ -13,7 +14,8 @@ export default class SelectableShape extends Shape implements IShapeSelection{
         return this.properties
       }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
+    draw(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState) {
+        const {realRect, screenRect} = viewPortData
         this.refresh(realRect, screenRect);
         this.refreshStyle(ctx)
     }

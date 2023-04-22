@@ -19,13 +19,14 @@ export default class Grid extends Shape {
         this.xAxe.setStyle(new ShapeStyle(Color.RED, ShapeStyle.SOLID, 1))
         this.yAxe.setStyle(new ShapeStyle(Color.RED, ShapeStyle.SOLID, 1))
     }
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, viewPortData?: ViewPortState) {
+    draw(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState) {
+        const {realRect, screenRect} = viewPortData
         this.refresh(realRect, screenRect);
         this.refreshStyle(ctx)
         const gridNumbers: GridNumbers = this.drawGrid(ctx, realRect, screenRect, viewPortData as ViewPortState)
         this.drawCoordinates(ctx, realRect, screenRect, viewPortData as ViewPortState, gridNumbers)
-        this.xAxe.draw(ctx, realRect, screenRect)
-        this.yAxe.draw(ctx, realRect, screenRect)
+        this.xAxe.draw(ctx, viewPortData)
+        this.yAxe.draw(ctx, viewPortData)
     }
     refresh(realRect: Rectangle, screenRect: Rectangle) { };
 

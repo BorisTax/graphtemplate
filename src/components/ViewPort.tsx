@@ -38,7 +38,7 @@ export default function ViewPort({ viewPortData, setViewPortData, shapeState, ha
     [])
     const doubleClick = useDoubleClick(eventHandlers, (e: PointerEvent) => eventHandlers.onDoubleClick(e))
     return <ToolBar id={"canvas-container"} noTitle={true} wide={true}>
-        <canvas ref={refCanvas} id="canvas" style={{ width: `${viewPortData.viewPortWidth}px`, height: `${viewPortData.viewPortHeight}px`, cursor: 'none' }} width={viewPortData.viewPortWidth} height={viewPortData.viewPortHeight}
+        <canvas ref={refCanvas} id="canvas" style={{ width: `${viewPortData.screenRect.width}px`, height: `${viewPortData.screenRect.height}px`, cursor: 'none' }} width={viewPortData.screenRect.width} height={viewPortData.screenRect.height}
             {...events}
             onClick={doubleClick}
            

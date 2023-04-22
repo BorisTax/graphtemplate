@@ -16,7 +16,8 @@ export default class Shape implements IShape, IShapeSelection{
         return this.properties
       }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, viewPortData?: ViewPortState) {
+    draw(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState) {
+        const {realRect, screenRect} = viewPortData
         this.refresh(realRect, screenRect);
         this.refreshStyle(ctx)
     }

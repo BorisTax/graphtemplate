@@ -9,13 +9,14 @@ export function getPoint(e: any) {
 }
 
 export function scale(factor: number, anchor: Point, viewPortData: ViewPortState) {
-  const { realWidth, viewPortWidth, viewPortHeight, topLeft }: ViewPortState = viewPortData;
-  const rw = realWidth * factor;
+  const { realRect, screenRect }: ViewPortState = viewPortData;
+
+  const rw = realRect.width * factor;
   var gridStep = viewPortData.gridStep;
-  const pixelRatio = rw / viewPortWidth;
-  const realHeight = viewPortHeight * pixelRatio;
-  var dx = anchor.x - topLeft.x;
-  var dy = anchor.y - topLeft.y;
+  const pixelRatio = rw / screenRect.width;
+  const realHeight = screenRect.height * pixelRatio;
+  var dx = anchor.x - realRect.topLeft.x;
+  var dy = anchor.y - realRect.topLeft.y;
   //if (realHeight < 500) return { ...viewPortData };
   dx = dx * factor;
   dy = dy * factor;
@@ -30,12 +31,10 @@ export function scale(factor: number, anchor: Point, viewPortData: ViewPortState
   } else if (gridStep / pixelRatio > 100)
     if (gridStep > 0.001) gridStep = gridStep / 10;
   const gridStepPixels = Math.round(gridStep / pixelRatio);
+  const newRealRect = getRealRect(tl, br) 
   return {
     ...viewPortData,
-    realWidth: rw,
-    realHeight,
-    topLeft: tl,
-    bottomRight: br,
+    realRect: newRealRect,
     pixelRatio,
     gridStepPixels,
     gridStep,
@@ -52,9 +51,9 @@ export function setCurCoord(realPoint: Point, screenPoint: Point, viewPortData: 
 
 export function setTopLeft(topLeft: Point, viewPortData: ViewPortState) {
   var bottomRight = {x: 0, y: 0};
-  bottomRight.x = topLeft.x + viewPortData.realWidth;
-  bottomRight.y = topLeft.y - viewPortData.realHeight;
-  return { ...viewPortData, topLeft, bottomRight };
+  bottomRight.x = topLeft.x + viewPortData.realRect.width;
+  bottomRight.y = topLeft.y - viewPortData.realRect.height;
+  return { ...viewPortData, realRect: getRealRect(topLeft, bottomRight) };
 }
 export function getRealRect(topLeft: Point, bottomRight: Point): Rectangle {
   return new Rectangle(topLeft, bottomRight)
@@ -66,25 +65,25 @@ export function getScreenRect(viewPortWidth: number, viewPortHeight: number): Re
 
 export function getRealAndScreenRect(viewPortData: ViewPortState) {
   return {
-    realRect: getRealRect(viewPortData.topLeft, viewPortData.bottomRight),
-    screenRect: getScreenRect(viewPortData.viewPortWidth, viewPortData.viewPortHeight)
+    realRect: getRealRect(viewPortData.realRect.topLeft, viewPortData.realRect.bottomRight),
+    screenRect: getScreenRect(viewPortData.screenRect.width, viewPortData.screenRect.height)
   }
 }
 
 export function setDimensions(width: number, height: number, realWidth: number, viewPortData: ViewPortState) {
   const rh = (height * realWidth) / width;
+  const br = {
+    x: viewPortData.realRect.topLeft.x + realWidth,
+    y: viewPortData.realRect.topLeft.y - rh,
+  }
+  const newRealRect = getRealRect(viewPortData.realRect.topLeft, br)
+  const newScreenRect = getScreenRect(width, height)
   return {
     ...viewPortData,
-    viewPortWidth: width,
-    viewPortHeight: height,
-    realWidth: realWidth,
+    realRect: newRealRect,
+    screenRect: newScreenRect,
     ratio: width / height,
-    pixelRatio: realWidth / viewPortData.viewPortWidth,
-    realHeight: rh,
-    bottomRight: {
-      x: viewPortData.topLeft.x + realWidth,
-      y: viewPortData.topLeft.y - rh,
-    },
+    pixelRatio: realWidth / newScreenRect.width,
   };
 }
 
@@ -94,21 +93,22 @@ export function zoomToRect({ topLeft, bottomRight }: Rectangle, viewPortData: Vi
   const ratio = rectWidth / rectHeight
   const realWidth = ratio < viewPortData.ratio ? rectHeight * viewPortData.ratio : rectWidth
 
-  const newViewPortData = setDimensions(viewPortData.viewPortWidth, viewPortData.viewPortHeight, realWidth, viewPortData);
+  const newViewPortData = setDimensions(viewPortData.screenRect.width, viewPortData.screenRect.height, realWidth, viewPortData);
   const point = {
     x: (topLeft.x + bottomRight.x) / 2,
     y: (topLeft.y + bottomRight.y) / 2,
   };
-  let viewPortWidth = newViewPortData.realWidth - (newViewPortData.marginLeft + newViewPortData.marginRight) * newViewPortData.pixelRatio;
-  let viewPortHeight = newViewPortData.realHeight - (newViewPortData.marginTop + newViewPortData.marginBottom) * newViewPortData.pixelRatio;
+  let viewPortWidth = newViewPortData.realRect.width - (newViewPortData.marginLeft + newViewPortData.marginRight) * newViewPortData.pixelRatio;
+  let viewPortHeight = newViewPortData.realRect.height - (newViewPortData.marginTop + newViewPortData.marginBottom) * newViewPortData.pixelRatio;
   const tl = {
     x: point.x - viewPortWidth / 2 - newViewPortData.marginLeft * newViewPortData.pixelRatio,
     y: point.y + viewPortHeight / 2 + newViewPortData.marginTop * newViewPortData.pixelRatio,
   };
   const br = {x: 0, y: 0};
-  br.x = tl.x + newViewPortData.realWidth;
-  br.y = tl.y - newViewPortData.realHeight;
-  return { ...newViewPortData, topLeft: tl, bottomRight: br };
+  br.x = tl.x + newViewPortData.realRect.width;
+  br.y = tl.y - newViewPortData.realRect.height;
+  const newRealRect = getRealRect(tl, br)
+  return { ...newViewPortData, realRect: newRealRect };
 }
 
 export function addWindowListeners(viewPortData: ViewPortState, setViewPortData: SetViewPortFunc, canvas: HTMLCanvasElement) {
@@ -152,7 +152,7 @@ function resize(viewPortData: ViewPortState, setViewPortData: SetViewPortFunc, c
     window.innerHeight <= window.innerWidth
       ? wHeight * 0.8
       : sw
-  setViewPortData(setDimensions(sw, sh, viewPortData.realWidth, viewPortData)
+  setViewPortData(setDimensions(sw, sh, viewPortData.realRect.width, viewPortData)
   );
   // canvas.width = sw;
   // canvas.height = sh;

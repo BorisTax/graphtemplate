@@ -16,7 +16,7 @@ export interface IShape {
     getProperties: () => Map<string, TProperties>
     refreshStyle: (ctx: CanvasRenderingContext2D) => void
     refresh: (realRect: Rectangle, screenRect: Rectangle) => void
-    draw: (ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle, viewPortData?: ViewPortState) => void
+    draw: (ctx: CanvasRenderingContext2D, viewPortData: ViewPortState) => void
     getStyle: () => ShapeStyle
     setStyle: (style: ShapeStyle) => void
     setState: (state: ShapeState) => void

@@ -33,23 +33,23 @@ export class MouseHandler implements IHandler {
     click(props: TMouseProps) {
         const { curPoint, viewPortData } = props
         this.clickCount++;
-        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
+        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.screenRect.width, viewPortData.screenRect.height, viewPortData.realRect.topLeft, viewPortData.realRect.bottomRight);
         this.prevPoint = { ...this.curPoint }
     }
     doubleClick(props: TMouseProps) {
         const { curPoint, viewPortData } = props
-        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
+        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.screenRect.width, viewPortData.screenRect.height, viewPortData.realRect.topLeft, viewPortData.realRect.bottomRight);
     }
     isOutRect(p: Point, viewPortData: ViewPortState) {
-        return p.x < viewPortData.marginLeft || p.x > viewPortData.viewPortWidth - viewPortData.marginRight
-            || p.y < viewPortData.marginTop || p.y > viewPortData.viewPortHeight - viewPortData.marginBottom;
+        return p.x < viewPortData.marginLeft || p.x > viewPortData.screenRect.width - viewPortData.marginRight
+            || p.y < viewPortData.marginTop || p.y > viewPortData.screenRect.height - viewPortData.marginBottom;
     }
     move(props: TMouseProps) {
         const { curPoint, viewPortData } = props
         this.screenPoint = curPoint
         this.curPoint.x = Math.trunc(this.curPoint.x);
         this.curPoint.y = Math.trunc(this.curPoint.y);
-        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
+        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.screenRect.width, viewPortData.screenRect.height, viewPortData.realRect.topLeft, viewPortData.realRect.bottomRight);
         this.prevPoint = { ...this.curPoint }
         this.cursor.setPosition(this.curPoint)
         if (!this.mouseOnScreen(viewPortData)) {
@@ -62,7 +62,7 @@ export class MouseHandler implements IHandler {
     }
     down(props: TMouseProps) {
         const { curPoint, viewPortData } = props
-        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
+        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.screenRect.width, viewPortData.screenRect.height, viewPortData.realRect.topLeft, viewPortData.realRect.bottomRight);
     }
     up(props: TMouseProps) { }
     leave(props: TMouseProps) {
@@ -70,8 +70,8 @@ export class MouseHandler implements IHandler {
     }
     wheel(props: TWheelProps) {
         const { deltaY = 0, curPoint, viewPortData, setViewPortData } = props
-        let point = Geometry.screenToReal(curPoint, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
-        if ((deltaY > 0) && (viewPortData.realWidth <= 9000)) setViewPortData(scale(1.2, point, viewPortData))
+        let point = Geometry.screenToReal(curPoint, viewPortData.screenRect.width, viewPortData.screenRect.height, viewPortData.realRect.topLeft, viewPortData.realRect.bottomRight);
+        if ((deltaY > 0) && (viewPortData.realRect.width <= 9000)) setViewPortData(scale(1.2, point, viewPortData))
         if ((deltaY < 0) && (viewPortData.pixelRatio >= 0.001)) setViewPortData(scale(1 / 1.2, point, viewPortData));
     }
     touchDown(props: TTouchProps) {
@@ -83,7 +83,7 @@ export class MouseHandler implements IHandler {
     touchMove(props: TTouchProps) {
         const { pointerId, curPoint, viewPortData } = props
         viewPortData.touchManager.setPoint(pointerId, curPoint)
-        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.viewPortWidth, viewPortData.viewPortHeight, viewPortData.topLeft, viewPortData.bottomRight);
+        this.curPoint = Geometry.screenToReal(curPoint, viewPortData.screenRect.width, viewPortData.screenRect.height, viewPortData.realRect.topLeft, viewPortData.realRect.bottomRight);
     }
 
     touchUp(props: TTouchProps) {

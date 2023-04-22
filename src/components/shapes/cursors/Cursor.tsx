@@ -1,3 +1,4 @@
+import { ViewPortState } from "../../../atoms/viewportAtoms";
 import { TAddKeys } from "../../../handlers/keyHandlers/options";
 import { Point } from "../../../types/properties";
 import Geometry, { Rectangle } from "../../../utils/geometry";
@@ -9,7 +10,7 @@ export interface ICursor {
     keys: TAddKeys
     style: ShapeStyle
     refresh: (realRect: Rectangle, screenRect: Rectangle) => void
-    draw: (ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) => void
+    draw: (ctx: CanvasRenderingContext2D, viewPortData: ViewPortState) => void
     setPosition: (point: Point) => void
     setAdditional: (keys: TAddKeys) => void
 }
@@ -23,7 +24,7 @@ export default class Cursor implements ICursor{
         this.point = point;
     }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle){
+    draw(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState){
 
     }
 

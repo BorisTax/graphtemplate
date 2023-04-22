@@ -1,3 +1,4 @@
+import { ViewPortState } from '../../../atoms/viewportAtoms';
 import { IShape } from '../../../interfaces/ShapeInterface';
 import Property, { Point, PropertyTypes, ScreenRect, TProperties } from '../../../types/properties';
 import Geometry, { Rectangle, Line, Intersection } from '../../../utils/geometry';
@@ -48,9 +49,8 @@ export default class RectangleShape extends Shape implements IRectangle {
         }))
     }
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
-        super.draw(ctx, realRect, screenRect)
-        const width = this.properties.get("width")
+    draw(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState) {
+        super.draw(ctx, viewPortData)
         ctx.strokeRect(this.screenRect.x, this.screenRect.y, this.screenRect.width, this.screenRect.height);
     }
     refresh(realRect: Rectangle, screenRect: Rectangle) {

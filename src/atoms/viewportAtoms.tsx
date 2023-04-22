@@ -2,6 +2,8 @@ import { atom } from 'jotai'
 import TouchManager from "../handlers/TouchManager";
 import Grid from '../components/shapes/Grid';
 import Shape from '../components/shapes/Shape';
+import { Rectangle } from '../utils/geometry';
+import { getRealRect, getScreenRect } from '../functions/viewPortFunctions';
 
 export type ViewPortState = {
     curRealPoint: { x: number, y: number },
@@ -11,10 +13,9 @@ export type ViewPortState = {
     marginTop: number, marginLeft: number, marginBottom: number, marginRight: number,
     maxPanWidth: number, maxPanHeight: number,
     ratio: number, pixelRatio: number,
-    realWidth: number, realHeight: number,
-    viewPortHeight: number, viewPortWidth: number,
     selectDist: number, snapDist: number, snapMinDist: number,
-    topLeft: { x: number, y: number }, bottomRight: { x: number, y: number },
+    realRect: Rectangle,
+    screenRect: Rectangle,
     touchManager: TouchManager,
 }
 
@@ -33,13 +34,12 @@ function getInitialState(): ViewPortState {
         marginTop: 0, marginLeft: 0, marginBottom: 0, marginRight: 0,
         maxPanWidth: 3000, maxPanHeight: 3000,
         ratio: 1, pixelRatio: 1,
-        realWidth: 3000, realHeight: 2600,
-        viewPortHeight: 400,
-        viewPortWidth: 550,
         selectDist: 2,
         snapDist: 20, snapMinDist: 10,
-        topLeft: { x: -5000, y: 2500 },
-        bottomRight: { x: 2500, y: -100 },
+        realRect: getRealRect({ x: -5000, y: 2500 },
+            { x: 2500, y: -100 })
+        ,
+        screenRect: getScreenRect(550, 400),
         touchManager: new TouchManager(),
     }
 }

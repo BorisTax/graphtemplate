@@ -1,9 +1,11 @@
+import { ViewPortState } from "../../../atoms/viewportAtoms";
 import { Rectangle } from "../../../utils/geometry";
 import Cursor from "./Cursor";
 
 export default class SelectCursor extends Cursor {
 
-    draw(ctx: CanvasRenderingContext2D, realRect: Rectangle, screenRect: Rectangle) {
+    draw(ctx: CanvasRenderingContext2D, viewPortData: ViewPortState) {
+        const {realRect, screenRect} = viewPortData
         this.refresh(realRect, screenRect);
         ctx.strokeStyle = this.getStyle().getColor();
         ctx.setLineDash(this.getStyle().getStroke());
